@@ -1,0 +1,87 @@
+group,axis,value,description
+Network traffic analysis ,heavy tailed,100,440.0
+Network traffic analysis ,recon gurable,100,440.0
+Network traffic analysis ,traffic characteristics,80,352.0
+Network traffic analysis ,traf,49.318181818182,217.0
+Network traffic analysis ,traces,30.454545454545,134.0
+Network traffic analysis ,traffic,19.772727272727,87.0
+Network traffic analysis ,tcp,18.409090909091,81.0
+Network traffic analysis ,arrival,17.045454545455,75.0
+Network traffic analysis ,workload,15.227272727273,67.0
+Network traffic analysis ,video,14.772727272727,65.0
+Network traffic analysis ,loss,11.818181818182,52.0
+Network traffic analysis ,characteristics,11.590909090909,51.0
+Network traffic analysis ,queue,10.909090909091,48.0
+Network traffic analysis ,cache,9.0909090909091,40.0
+Network traffic analysis ,fpga,8.4090909090909,37.0
+Network traffic analysis ,distribution,6.5909090909091,29.0
+Network traffic analysis ,server,6.5909090909091,29.0
+Network traffic analysis ,servers,5.6818181818182,25.0
+Network traffic analysis ,bandwidth,5.2272727272727,23.0
+Network traffic analysis ,rate,4.5454545454545,20.0
+Network traffic analysis ,packet,4.3181818181818,19.0
+Network traffic analysis ,internet,3.4090909090909,15.0
+Network traffic analysis ,standards conformity,0,0
+Network traffic analysis ,united states,0,0
+Network traffic analysis ,tuning,0,0
+Network traffic analysis ,jovial,0,0
+Network traffic analysis ,siggraph,0,0
+Network traffic analysis ,meetings,0,0
+Network traffic analysis ,compilation,0,0
+Network traffic analysis ,publication,0,0
+Network traffic analysis ,executive,0,0
+Network traffic analysis ,optimizations,0,0
+Network traffic analysis ,board,0,0
+Network traffic analysis ,committee,0,0
+Network traffic analysis ,optimization,0,0
+Network traffic analysis ,publications,0,0
+Network traffic analysis ,chair,0,0
+Network traffic analysis ,compiler,0,0
+Network traffic analysis ,members,0,0
+Network traffic analysis ,year,0,0
+Network traffic analysis ,report,0,0
+Network traffic analysis ,local,0,0
+Network traffic analysis ,public,0,0
+MIXED,heavy tailed,0,0
+MIXED,recon gurable,0,0
+MIXED,traffic characteristics,0,0
+MIXED,traf,0,0
+MIXED,traces,0,0
+MIXED,traffic,0,0
+MIXED,tcp,0,0
+MIXED,arrival,0,0
+MIXED,workload,0,0
+MIXED,video,0,0
+MIXED,loss,0,0
+MIXED,characteristics,0,0
+MIXED,queue,0,0
+MIXED,cache,0,0
+MIXED,fpga,0,0
+MIXED,distribution,0,0
+MIXED,server,0,0
+MIXED,servers,0,0
+MIXED,bandwidth,0,0
+MIXED,rate,0,0
+MIXED,packet,0,0
+MIXED,internet,0,0
+MIXED,standards conformity,80,352.0
+MIXED,united states,40.454545454545,178.0
+MIXED,tuning,13.409090909091,59.0
+MIXED,jovial,9.5454545454545,42.0
+MIXED,siggraph,8.1818181818182,36.0
+MIXED,meetings,6.3636363636364,28.0
+MIXED,compilation,5.4545454545455,24.0
+MIXED,publication,5.2272727272727,23.0
+MIXED,executive,4.7727272727273,21.0
+MIXED,optimizations,4.7727272727273,21.0
+MIXED,board,3.8636363636364,17.0
+MIXED,committee,3.1818181818182,14.0
+MIXED,optimization,2.9545454545455,13.0
+MIXED,publications,2.7272727272727,12.0
+MIXED,chair,2.2727272727273,10.0
+MIXED,compiler,2.2727272727273,10.0
+MIXED,members,2.0454545454545,9.0
+MIXED,year,1.8181818181818,8.0
+MIXED,report,1.5909090909091,7.0
+MIXED,local,1.1363636363636,5.0
+MIXED,public,1.1363636363636,5.0

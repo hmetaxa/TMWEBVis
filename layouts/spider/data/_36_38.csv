@@ -1,0 +1,97 @@
+group,axis,value,description
+Network traffic analysis ,heavy tailed,100,440.0
+Network traffic analysis ,recon gurable,100,440.0
+Network traffic analysis ,traffic characteristics,80,352.0
+Network traffic analysis ,traf,49.318181818182,217.0
+Network traffic analysis ,traces,30.454545454545,134.0
+Network traffic analysis ,traffic,19.772727272727,87.0
+Network traffic analysis ,tcp,18.409090909091,81.0
+Network traffic analysis ,arrival,17.045454545455,75.0
+Network traffic analysis ,workload,15.227272727273,67.0
+Network traffic analysis ,video,14.772727272727,65.0
+Network traffic analysis ,loss,11.818181818182,52.0
+Network traffic analysis ,characteristics,11.590909090909,51.0
+Network traffic analysis ,queue,10.909090909091,48.0
+Network traffic analysis ,cache,9.0909090909091,40.0
+Network traffic analysis ,fpga,8.4090909090909,37.0
+Network traffic analysis ,distribution,6.5909090909091,29.0
+Network traffic analysis ,server,6.5909090909091,29.0
+Network traffic analysis ,servers,5.6818181818182,25.0
+Network traffic analysis ,bandwidth,5.2272727272727,23.0
+Network traffic analysis ,rate,4.5454545454545,20.0
+Network traffic analysis ,packet,4.3181818181818,19.0
+Network traffic analysis ,internet,3.4090909090909,15.0
+Network traffic analysis ,incentive compatible,0,0
+Network traffic analysis ,social welfare,0,0
+Network traffic analysis ,auctions,0,0
+Network traffic analysis ,auction,0,0
+Network traffic analysis ,nash equilibrium,0,0
+Network traffic analysis ,bidders,0,0
+Network traffic analysis ,mechanism,0,0
+Network traffic analysis ,combinatorial auctions,0,0
+Network traffic analysis ,agents,0,0
+Network traffic analysis ,game theory,0,0
+Network traffic analysis ,game theoretic,0,0
+Network traffic analysis ,revenue,0,0
+Network traffic analysis ,truthful,0,0
+Network traffic analysis ,bid,0,0
+Network traffic analysis ,incentive,0,0
+Network traffic analysis ,bids,0,0
+Network traffic analysis ,mechanisms,0,0
+Network traffic analysis ,game,0,0
+Network traffic analysis ,agent,0,0
+Network traffic analysis ,combinatorial,0,0
+Network traffic analysis ,equilibrium,0,0
+Network traffic analysis ,resource allocation,0,0
+Network traffic analysis ,price,0,0
+Network traffic analysis ,market,0,0
+Network traffic analysis ,allocation,0,0
+Network traffic analysis ,optimal,0,0
+Game theory, agents & auctions,heavy tailed,0,0
+Game theory, agents & auctions,recon gurable,0,0
+Game theory, agents & auctions,traffic characteristics,0,0
+Game theory, agents & auctions,traf,0,0
+Game theory, agents & auctions,traces,0,0
+Game theory, agents & auctions,traffic,0,0
+Game theory, agents & auctions,tcp,0,0
+Game theory, agents & auctions,arrival,0,0
+Game theory, agents & auctions,workload,0,0
+Game theory, agents & auctions,video,0,0
+Game theory, agents & auctions,loss,0,0
+Game theory, agents & auctions,characteristics,0,0
+Game theory, agents & auctions,queue,0,0
+Game theory, agents & auctions,cache,0,0
+Game theory, agents & auctions,fpga,0,0
+Game theory, agents & auctions,distribution,0,0
+Game theory, agents & auctions,server,0,0
+Game theory, agents & auctions,servers,0,0
+Game theory, agents & auctions,bandwidth,0,0
+Game theory, agents & auctions,rate,0,0
+Game theory, agents & auctions,packet,0,0
+Game theory, agents & auctions,internet,0,0
+Game theory, agents & auctions,incentive compatible,180,792.0
+Game theory, agents & auctions,social welfare,160,704.0
+Game theory, agents & auctions,auctions,124.09090909091,546.0
+Game theory, agents & auctions,auction,102.5,451.0
+Game theory, agents & auctions,nash equilibrium,100,440.0
+Game theory, agents & auctions,bidders,85,374.0
+Game theory, agents & auctions,mechanism,81.590909090909,359.0
+Game theory, agents & auctions,combinatorial auctions,80,352.0
+Game theory, agents & auctions,agents,78.409090909091,345.0
+Game theory, agents & auctions,game theory,76.363636363636,336.0
+Game theory, agents & auctions,game theoretic,75,330.0
+Game theory, agents & auctions,revenue,73.181818181818,322.0
+Game theory, agents & auctions,truthful,70.909090909091,312.0
+Game theory, agents & auctions,bid,68.636363636364,302.0
+Game theory, agents & auctions,incentive,65.681818181818,289.0
+Game theory, agents & auctions,bids,62.5,275.0
+Game theory, agents & auctions,mechanisms,57.045454545455,251.0
+Game theory, agents & auctions,game,52.5,231.0
+Game theory, agents & auctions,agent,49.090909090909,216.0
+Game theory, agents & auctions,combinatorial,48.181818181818,212.0
+Game theory, agents & auctions,equilibrium,43.409090909091,191.0
+Game theory, agents & auctions,resource allocation,40,176.0
+Game theory, agents & auctions,price,29.772727272727,131.0
+Game theory, agents & auctions,market,24.772727272727,109.0
+Game theory, agents & auctions,allocation,12.045454545455,53.0
+Game theory, agents & auctions,optimal,7.2727272727273,32.0

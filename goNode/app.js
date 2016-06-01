@@ -1,7 +1,6 @@
 var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database('/data/PTMDB_ACM2016.db');
-// var db = new sqlite3.Database('/data/PTM3DB_oct15.db');
-// var db = new sqlite3.Database('/Users/nmpegetis/Sites/astero.di.uoa.gr/graphs/dbs/new/PTMDB_ACM2016.db');
+// var db = new sqlite3.Database('/data/PTMDB_ACM2016.db');
+var db = new sqlite3.Database('/Users/nmpegetis/Sites/astero.di.uoa.gr/graphs/dbs/new/PTMDB_ACM2016.db');
 // var db = new sqlite3.Database('/data/PTM3DB_oct15.db');
 
 // db.serialize(function() {
@@ -39,18 +38,18 @@ restapi.get('/getConnections', function (req, res) {
     var query = "";
 //todo na balw elegxo gia ta parapanw gia minuma lathous
     if (param3 == "acm")
-        // query = "select EntityId1 as node1id, EntityId2 as node2id, Author1 as node1name, Author2 as node2name, AC1_Category0 as category1_1, AC1_Category0 as category1_2, AC1_Category0 as category1_3, AC2_Category0 as category2_1, AC2_Category0 as category2_2, AC2_Category0 as category2_3, catCnts1 as category1_counts, catCnts2 as category2_counts, Similarity from EntitySimilarity where ExperimentId=? and  Similarity>?";
+    // query = "select EntityId1 as node1id, EntityId2 as node2id, Author1 as node1name, Author2 as node2name, AC1_Category0 as category1_1, AC1_Category0 as category1_2, AC1_Category0 as category1_3, AC2_Category0 as category2_1, AC2_Category0 as category2_2, AC2_Category0 as category2_3, catCnts1 as category1_counts, catCnts2 as category2_counts, Similarity from EntitySimilarity where ExperimentId=? and  Similarity>?";
         query = "select * from EntitySimilarity where ExperimentId=? and  Similarity>?";
     else
         query = "select * from mygraph";
 
-    var rowset = db.all(query, [param1,param2], function (err, row) {
+    var rowset = db.all(query, [param1, param2], function (err, row) {
 
         // data.push(row)
-       for (var i = 0; i < row.length; i++) {
+        for (var i = 0; i < row.length; i++) {
             data.push(row[i])
             // data.push({"id" : row[i].ExperimentId, "desc":row[i].Description, "Metadata":row[i].Metadata, "initialSimilarity":row[i].InitialSimilarity, "PhraseBoost":row[i].PhraseBoost})
-       }
+        }
         res.json({"response": data})
     });
 });
@@ -62,8 +61,9 @@ restapi.get('/getNodes', function (req, res) {
     var param2 = req.query.sample;
     var query = "";
 
-    if (param2 == "ACM")
-        query = "select authorid, ta.topicid, Standard as weight from topicdistributionperauthor as ta,TopicDescription as td where ta.topicId=td.topicid and ExperimentId=? order by authorid, ta.TopicId";
+    if (param2 == "acm")
+    // query = "select authorid, ta.topicid, Standard as weight from topicdistributionperauthor as ta,TopicDescription as td where ta.topicId=td.topicid and ExperimentId=? order by authorid, ta.TopicId";
+        query = "SELECT Entityid AS AuthorID, entityTopicDistribution.topicid, normweight as weight FROM entityTopicDistribution INNER JOIN TopicDescription ON entityTopicDistribution.topicId = TopicDescription.topicid AND entityTopicDistribution.ExperimentId = TopicDescription.ExperimentId WHERE entityTopicDistribution.ExperimentId = ? AND BatchID = '' AND EntityType = 'Author' ORDER BY authorid, entityTopicDistribution.TopicId";
     else
         query = "select project_code, TopicId, weight from mynodes where ExperimentId=?";
 
@@ -95,13 +95,14 @@ restapi.get('/getTopics', function (req, res) {
     var param4 = req.query.sample;
     var query = "";
 
-    if (param4 == "acm"){
+    if (param4 == "acm") {
         if (param3)
-            query = "select TopicId, title, Item, WeightedCounts, ExperimentId from topicsweightsort as tw where ExperimentId=?";
+            // query = "select TopicId, title, Item, WeightedCounts, ExperimentId from topicsweightsort as tw where ExperimentId=?";
+            query = "SELECT tdes.TopicId, tanal.Item, tdet.Weight, tdes.title, tanal.counts, tanal.ItemType FROM topicdescription as tdes INNER JOIN topicdetails as tdet ON tdes.topicid = tdet.topicid AND tdes.ExperimentId = tdet.ExperimentId AND tdes.VisibilityIndex = 2 INNER JOIN topicanalysis as tanal ON tdes.topicid = tanal.topicid AND tdes.ExperimentId = tanal.ExperimentId WHERE tdes.ExperimentId = ? ";
         else
             query = "select TopicId, title, Item, WeightedCounts, ExperimentId from topicsweightnosort as tw where ExperimentId=?";
     }
-    else{
+    else {
         if (param3)
             query = "select TopicId, title, Item, WeightedCounts, ExperimentId from topicsweightsort as tw where ExperimentId=?";
         else
@@ -120,7 +121,8 @@ restapi.get('/getTopics', function (req, res) {
         notfirst = true;
     }
     if (param1)
-        query += ")";
+        query += ") ORDER BY tdes.TopicID ASC, Counts DESC";
+
 
     var rowset = db.all(query, [param2], function (err, row) {
         for (var i = 0; i < row.length; i++) {
@@ -130,7 +132,6 @@ restapi.get('/getTopics', function (req, res) {
         res.json({"response": data})
     });
 });
-
 
 restapi.get('/getCloud', function (req, res) {
     var data = [];
@@ -142,8 +143,9 @@ restapi.get('/getCloud', function (req, res) {
     var ids = param1.split(",");
     var notfirst = false;
 
-    if (param3 == "acm"){
-        query = "select Title, Item, WeightedCounts, TopicId from topicsweightsort as tw where ";
+    if (param3 == "acm") {
+        // query = "select Title, Item, WeightedCounts, TopicId from topicsweightsort as tw where ";
+        query = "SELECT tdes.title, tanal.Item, tanal.Counts, tdes.TopicId FROM topicdescription as tdes INNER JOIN topicanalysis as tanal ON tdes.topicid = tanal.topicid AND tdes.ExperimentId = tanal.ExperimentId AND tdes.VisibilityIndex = 2 WHERE tdes.ExperimentId = ? and ";
         for (var id in ids) {
             if (notfirst)
                 query += " or ";
@@ -151,7 +153,7 @@ restapi.get('/getCloud', function (req, res) {
             notfirst = true;
         }
     }
-    else{
+    else {
         query = "select Title, Item, WeightedCounts, TopicId from topicsweightsort as tw where ";
         for (var id in ids) {
             if (notfirst)

@@ -23,5 +23,11 @@
 // spider
     exports.authortopics = "SELECT FirstName as center, LastName as centerLast, Title as spider, normweight as weight, Entityid as centerid, entityTopicDistribution.topicid as spiderids FROM entityTopicDistribution INNER JOIN TopicDescription ON entityTopicDistribution.topicId = TopicDescription.topicid AND entityTopicDistribution.ExperimentId = TopicDescription.ExperimentId INNER JOIN Author ON entityTopicDistribution.EntityId = Author.AuthorId WHERE entityTopicDistribution.ExperimentId = ? AND BatchID = '' AND EntityType = 'Author' ";
     // -- and EntityId='81100002314'
-    exports.similarauthors = "SELECT Author1 AS center, Author2 AS spider, Similarity as weight, EntityId1 AS centerid, EntityId2 AS spiderids FROM EntitySimilarityView_authors WHERE ExperimentId = ? AND Similarity > ? and EntityId1=? union SELECT Author2   AS center, Author1   AS spider, Similarity as weight, EntityId2 AS centerid, EntityId1 AS spiderids FROM EntitySimilarityView_authors WHERE ExperimentId = ? AND Similarity > ? and EntityId2=?";
+
+    // the below two are used together with union. Reason: Multiple Authors. Previous query was: exports.similarauthors = "SELECT Author1 AS center, Author2 AS spider, Similarity as weight, EntityId1 AS centerid, EntityId2 AS spiderids FROM EntitySimilarityView_authors WHERE ExperimentId = ? AND Similarity > ? and EntityId1=? union SELECT Author2   AS center, Author1   AS spider, Similarity as weight, EntityId2 AS centerid, EntityId1 AS spiderids FROM EntitySimilarityView_authors WHERE ExperimentId = ? AND Similarity > ? and EntityId2=?";
+    exports.similarauthorsPart1 = "SELECT Author1 AS center, Author2 AS spider, Similarity as weight, EntityId1 AS centerid, EntityId2 AS spiderids FROM EntitySimilarityView_authors WHERE ExperimentId = ? AND Similarity > ?";
+    // -- and EntityId1='81100642315'
+    // -- union
+    exports.similarauthorsPart2 = "SELECT Author2 AS center, Author1 AS spider, Similarity as weight, EntityId2 AS centerid, EntityId1 AS spiderids FROM EntitySimilarityView_authors WHERE ExperimentId = ? AND Similarity > ?";
+    // -- and EntityId2='81100642315'
 })();

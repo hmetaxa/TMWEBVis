@@ -312,18 +312,50 @@ restapi.get('/getSpider', function (req, res) {
             res.json({"response": data})
         });
     }
-    else if (param3.toLowerCase() == "authors"){        // attention. In this ocassion only one id should be given. To be changed
-        query = queries.similarauthors;
+    else if (param3.toLowerCase() == "authors"){
+
+        query = queries.similarauthorsPart1;
 
         if (!req.query.s) {
-            param4 = 0.6;
+            param4 = 0.9;
         }
         else {
             param4 = req.query.s;
         }
 
+        if (param1 !== undefined){
+            ids = param1.split(",");
+
+            query += " and (";
+            for (var i in ids) {
+                if (notfirst)
+                    query += " or ";
+                query += "EntityId1=" + ids[i] + " ";
+                notfirst = true;
+            }
+            query += ")";
+        }
+
+        query += " Union ";
+        query += queries.similarauthorsPart2;
+
+        notfirst = false;
+
+        if (param1 !== undefined){
+            ids = param1.split(",");
+
+            query += " and (";
+            for (var i in ids) {
+                if (notfirst)
+                    query += " or ";
+                query += "EntityId2=" + ids[i] + " ";
+                notfirst = true;
+            }
+            query += ")";
+        }
+
         console.log("query: "+query);
-        var rowset = db.all(query, [param2,param4,param1,param2,param4,param1], function (err, row) {
+        var rowset = db.all(query, [param2,param4,param2,param4], function (err, row) {
             for (var i = 0; i < row.length; i++) {
                 data.push(row[i]);
             }
@@ -332,20 +364,5 @@ restapi.get('/getSpider', function (req, res) {
     }
 });
 
-// restapi.get('/getExperiments', function(req, res){
-//     var query = "select distinct ExperimentId,Description from experiment";
-//
-//     db.get(query, function(err, row){
-//         res.json(row);
-//     });
-// });
-
-// restapi.get('/getExperiments', function(req, res){
-//     db.get("SELECT * FROM experiment", function(err, row){
-//         res.json({ "count" : row });
-//     });
-// });
-
+// Submit GET or POST to http://localhost:3001/{webServiceName}
 restapi.listen(3001);
-
-// console.log("Submit GET or POST to http://localhost:3001/data");

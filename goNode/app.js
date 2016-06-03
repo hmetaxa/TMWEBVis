@@ -2,6 +2,8 @@ var sqlite3 = require('sqlite3').verbose();
 // var db = new sqlite3.Database('/data/PTMDB_ACM2016.db');
 var db = new sqlite3.Database('/Users/nmpegetis/Sites/astero.di.uoa.gr/graphs/dbs/new/PTMDB_ACM2016.db');
 // var db = new sqlite3.Database('/data/PTM3DB_oct15.db');
+var queries = require("./config.js");
+
 
 // db.serialize(function() {
 //     db.run("CREATE TABLE IF NOT EXISTS counts (key TEXT, value INTEGER)");
@@ -11,10 +13,13 @@ var db = new sqlite3.Database('/Users/nmpegetis/Sites/astero.di.uoa.gr/graphs/db
 var express = require('express');
 var restapi = express();
 
+
 restapi.get('/getExperiments', function (req, res) {
-    var query = "select distinct * from experiment";
+    // var query = "select distinct * from experiment";
+    var query = queries.experiments;
     var data = [];
 
+    console.log("query: "+query);
     var rowset = db.all(query, function (err, row) {
         for (var i = 0; i < row.length; i++) {
             data.push({
@@ -29,26 +34,25 @@ restapi.get('/getExperiments', function (req, res) {
     });
 });
 
-//todo na balw eswterika an den sumplirwthoun oi paramentroi na petaei error
+
 restapi.get('/getConnections', function (req, res) {
+    if (!req.query.ex || !req.query.s) {
+        res.json({"error": "Missing arguments"});
+        return;
+    }
+
     var data = [];
     var param1 = req.query.ex;  // ACM_400T_800IT_6000CHRs_150_10PRN100B_3M_4TH_cos, ACM_400T_1000IT_0IIT_100B_3M_cos
     var param2 = req.query.s;
-    var param3 = req.query.sample;
     var query = "";
-//todo na balw elegxo gia ta parapanw gia minuma lathous
-    if (param3 == "acm")
-    // query = "select EntityId1 as node1id, EntityId2 as node2id, Author1 as node1name, Author2 as node2name, AC1_Category0 as category1_1, AC1_Category0 as category1_2, AC1_Category0 as category1_3, AC2_Category0 as category2_1, AC2_Category0 as category2_2, AC2_Category0 as category2_3, catCnts1 as category1_counts, catCnts2 as category2_counts, Similarity from EntitySimilarity where ExperimentId=? and  Similarity>?";
-        query = "select * from EntitySimilarity where ExperimentId=? and  Similarity>?";
-    else
-        query = "select * from mygraph";
 
+    query = queries.graphLayout;
+
+    console.log("query: "+query);
     var rowset = db.all(query, [param1, param2], function (err, row) {
-
         // data.push(row)
         for (var i = 0; i < row.length; i++) {
             data.push(row[i])
-            // data.push({"id" : row[i].ExperimentId, "desc":row[i].Description, "Metadata":row[i].Metadata, "initialSimilarity":row[i].InitialSimilarity, "PhraseBoost":row[i].PhraseBoost})
         }
         res.json({"response": data})
     });
@@ -56,16 +60,16 @@ restapi.get('/getConnections', function (req, res) {
 
 
 restapi.get('/getNodes', function (req, res) {
+    if (!req.query.ex) {
+        res.json({"error": "Missing arguments"});
+        return;
+    }
+
     var data = [];
     var param = req.query.ex;
-    var param2 = req.query.sample;
     var query = "";
 
-    if (param2 == "acm")
-    // query = "select authorid, ta.topicid, Standard as weight from topicdistributionperauthor as ta,TopicDescription as td where ta.topicId=td.topicid and ExperimentId=? order by authorid, ta.TopicId";
-        query = "SELECT Entityid AS AuthorID, entityTopicDistribution.topicid, normweight as weight FROM entityTopicDistribution INNER JOIN TopicDescription ON entityTopicDistribution.topicId = TopicDescription.topicid AND entityTopicDistribution.ExperimentId = TopicDescription.ExperimentId WHERE entityTopicDistribution.ExperimentId = ? AND BatchID = '' AND EntityType = 'Author' ORDER BY authorid, entityTopicDistribution.TopicId";
-    else
-        query = "select project_code, TopicId, weight from mynodes where ExperimentId=?";
+    query = queries.nodes;
 
     //PHP CODE
     // do {
@@ -77,10 +81,10 @@ restapi.get('/getNodes', function (req, res) {
     // } while ($res = $stmt->fetch());
 
 
+    console.log("query: "+query);
     var rowset = db.all(query, [param], function (err, row) {
         for (var i = 0; i < row.length; i++) {
             data.push(row[i])
-            // data.push({"id" : row[i].ExperimentId, "desc":row[i].Description, "Metadata":row[i].Metadata, "initialSimilarity":row[i].InitialSimilarity, "PhraseBoost":row[i].PhraseBoost})
         }
         res.json({"response": data})
     });
@@ -88,90 +92,245 @@ restapi.get('/getNodes', function (req, res) {
 
 
 restapi.get('/getTopics', function (req, res) {
+    if (!req.query.ex) {
+        res.json({"error": "Missing arguments"});
+        return;
+    }
+    
     var data = [];
-    var param1 = req.query.id;
+    var param1;
     var param2 = req.query.ex;
-    var param3 = req.query.sort;
-    var param4 = req.query.sample;
     var query = "";
 
-    if (param4 == "acm") {
-        if (param3)
-            // query = "select TopicId, title, Item, WeightedCounts, ExperimentId from topicsweightsort as tw where ExperimentId=?";
-            query = "SELECT tdes.TopicId, tanal.Item, tdet.Weight, tdes.title, tanal.counts, tanal.ItemType FROM topicdescription as tdes INNER JOIN topicdetails as tdet ON tdes.topicid = tdet.topicid AND tdes.ExperimentId = tdet.ExperimentId AND tdes.VisibilityIndex = 2 INNER JOIN topicanalysis as tanal ON tdes.topicid = tanal.topicid AND tdes.ExperimentId = tanal.ExperimentId WHERE tdes.ExperimentId = ? ";
-        else
-            query = "select TopicId, title, Item, WeightedCounts, ExperimentId from topicsweightnosort as tw where ExperimentId=?";
+    if (!req.query.id) {
+        res.json({"error": "Missing arguments"});
+        return;
     }
     else {
-        if (param3)
-            query = "select TopicId, title, Item, WeightedCounts, ExperimentId from topicsweightsort as tw where ExperimentId=?";
-        else
-            query = "select TopicId, title, Item, WeightedCounts, ExperimentId from topicsweightnosort as tw where ExperimentId=?";
+        param1 = req.query.id;
+        if (param1 == "all")
+            param1 = undefined;
     }
 
-    var ids = param1.split(",");
+    query = queries.topics;
+
+    var ids;
     var notfirst = false;
-    if (param1)
+    if (param1 !== undefined){
+        ids = param1.split(",");
+
         query += " and (";
-
-    for (var id in ids) {
-        if (notfirst)
-            query += " or ";
-        query += "tw.TopicId='" + id + "'  ";
-        notfirst = true;
+        for (var i in ids) {
+            if (notfirst)
+                query += " or ";
+            query += "tanal.TopicId='" + ids[i] + "' ";
+            notfirst = true;
+        }
+        query += ")";
     }
-    if (param1)
-        query += ") ORDER BY tdes.TopicID ASC, Counts DESC";
 
+    query += " ORDER BY tdes.TopicID ASC, Counts DESC";
 
+    console.log("query: "+query);
     var rowset = db.all(query, [param2], function (err, row) {
         for (var i = 0; i < row.length; i++) {
             data.push(row[i]);
-            // data.push({"id" : row[i].ExperimentId, "desc":row[i].Description, "Metadata":row[i].Metadata, "initialSimilarity":row[i].InitialSimilarity, "PhraseBoost":row[i].PhraseBoost})
         }
         res.json({"response": data})
     });
 });
+
 
 restapi.get('/getCloud', function (req, res) {
+    if (!req.query.ex) {
+        res.json({"error": "Missing arguments"});
+        return;
+    }
+
     var data = [];
-    var param1 = req.query.id;
-    var param3 = req.query.sample;
+    var param1;
+    var param2 = req.query.ex;
     var query = "";
 
-
-    var ids = param1.split(",");
-    var notfirst = false;
-
-    if (param3 == "acm") {
-        // query = "select Title, Item, WeightedCounts, TopicId from topicsweightsort as tw where ";
-        query = "SELECT tdes.title, tanal.Item, tanal.Counts, tdes.TopicId FROM topicdescription as tdes INNER JOIN topicanalysis as tanal ON tdes.topicid = tanal.topicid AND tdes.ExperimentId = tanal.ExperimentId AND tdes.VisibilityIndex = 2 WHERE tdes.ExperimentId = ? and ";
-        for (var id in ids) {
-            if (notfirst)
-                query += " or ";
-            query += "tw.TopicId='" + id + "'  ";
-            notfirst = true;
-        }
+    if (!req.query.id) {
+        res.json({"error": "Missing arguments"});
+        return;
     }
     else {
-        query = "select Title, Item, WeightedCounts, TopicId from topicsweightsort as tw where ";
-        for (var id in ids) {
-            if (notfirst)
-                query += " or ";
-            query += "tw.TopicId='" + id + "'  ";
-            notfirst = true;
-        }
+        param1 = req.query.id;
+        if (param1 == "all")
+            param1 = undefined;
     }
 
-    var rowset = db.all(query, function (err, row) {
+    query = queries.cloud;
+
+    var ids;
+    var notfirst = false;
+    if (param1) {
+        ids = param1.split(",");
+
+        query += " and (";
+        for (var i in ids) {
+            if (notfirst)
+                query += " or ";
+            query += "tanal.TopicId=" + ids[i] + " ";
+            notfirst = true;
+        }
+        query += ")";
+    }
+
+    // sto cloud mallon den xreiazetai to parakatw
+    // query += " ORDER BY tdes.TopicID ASC, Counts DESC";
+
+    console.log("query: "+query);
+    var rowset = db.all(query, [param2], function (err, row) {
         for (var i = 0; i < row.length; i++) {
             data.push(row[i]);
-            // data.push({"id" : row[i].ExperimentId, "desc":row[i].Description, "Metadata":row[i].Metadata, "initialSimilarity":row[i].InitialSimilarity, "PhraseBoost":row[i].PhraseBoost})
         }
         res.json({"response": data})
     });
 });
 
+
+restapi.get('/getTrends', function (req, res) {
+    if (!req.query.ex || !req.query.set) {
+        res.json({"error": "Missing arguments"});
+        return;
+    }
+
+    var data = [];
+    var param1;
+    var param2 = req.query.ex;
+    var param3 = req.query.set;
+    var query = "";
+
+    if (req.query.id) {
+        param1 = req.query.id;
+        if (param1 == "all")
+            param1 = undefined;
+    }
+
+    if (param3.toLowerCase() == "journal") {
+        if (!req.query.id) {
+            res.json({"error": "Missing arguments"});
+            return;
+        }
+        query = queries.journal;
+    }
+    else if (param3.toLowerCase() == "conference"){
+        if (!req.query.id) {
+            res.json({"error": "Missing arguments"});
+            return;
+        }
+        query = queries.conference;
+    }
+    else if (param3.toLowerCase() == "corpus"){
+        query = queries.corpus;
+    }
+
+    var ids;
+    var notfirst = false;
+    if (param1 !== undefined){
+        ids = param1.split(",");
+
+        query += " and (";
+        for (var i in ids) {
+            if (notfirst)
+                query += " or ";
+            query += "EntityId='" + ids[i] + "' ";
+            notfirst = true;
+        }
+        query += ")";
+    }
+
+    query += " ORDER BY EntityTopicDistribution.TopicId";
+
+    console.log("query: "+query);
+    var rowset = db.all(query, [param2], function (err, row) {
+        for (var i = 0; i < row.length; i++) {
+            data.push(row[i]);
+        }
+        res.json({"response": data})
+    });
+});
+
+
+restapi.get('/getSpider', function (req, res) {
+    if (!req.query.ex || !req.query.set) {
+        res.json({"error": "Missing arguments"});
+        return;
+    }
+
+    var data = [];
+    var param1;
+    var param2 = req.query.ex;
+    var param3 = req.query.set;
+    var param4;
+    var query = "";
+
+    if (!req.query.id) {
+        res.json({"error": "Missing arguments"});
+        return;
+    }
+    else {
+        param1 = req.query.id;
+    }
+
+    var ids;
+    var notfirst = false;
+
+    if (param3.toLowerCase() == "topics") {
+        query = queries.authortopics;
+
+        if (param1 !== undefined){
+            ids = param1.split(",");
+
+            query += " and (";
+            for (var i in ids) {
+                if (notfirst)
+                    query += " or ";
+                query += "EntityId='" + ids[i] + "' ";
+                notfirst = true;
+            }
+            query += ")";
+        }
+
+        query += " ORDER BY entityTopicDistribution.EntityId, entityTopicDistribution.TopicId";
+
+        console.log("query: "+query);
+        var rowset = db.all(query, [param2], function (err, row) {
+            for (var i = 0; i < row.length; i++) {
+                // data.push(row[i]);
+                data.push({
+                    "center": row[i].center + " " + row[i].centerLast,
+                    "spider": row[i].spider,
+                    "weight": row[i].weight,
+                    "centerid": row[i].centerid,
+                    "spiderids": row[i].spiderids
+                });
+            }
+            res.json({"response": data})
+        });
+    }
+    else if (param3.toLowerCase() == "authors"){        // attention. In this ocassion only one id should be given. To be changed
+        query = queries.similarauthors;
+
+        if (!req.query.s) {
+            param4 = 0.6;
+        }
+        else {
+            param4 = req.query.s;
+        }
+
+        console.log("query: "+query);
+        var rowset = db.all(query, [param2,param4,param1,param2,param4,param1], function (err, row) {
+            for (var i = 0; i < row.length; i++) {
+                data.push(row[i]);
+            }
+            res.json({"response": data})
+        });
+    }
+});
 
 // restapi.get('/getExperiments', function(req, res){
 //     var query = "select distinct ExperimentId,Description from experiment";

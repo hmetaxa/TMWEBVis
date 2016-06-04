@@ -2,144 +2,506 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <link href="../../../css/bootstrap.css" rel="stylesheet">
+    <link href="../css/bootstrap.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="../../../css/prettify.css" />
-    <link rel="stylesheet" href="../../../css/stylemultiselect.css" />
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../css/prettify.css"/>
+    <link rel="stylesheet" href="../css/stylemultiselect.css"/>
+    <style>
+        @import url(//netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.css);
+        @import url(http://fonts.googleapis.com/css?family=Titillium+Web:300);
+
+        .fa-2x {
+            font-size: 2em;
+        }
+
+        .fa {
+            position: relative;
+            display: table-cell;
+            width: 60px;
+            height: 36px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 20px;
+        }
+
+        .main-menu:hover, nav.main-menu.expanded {
+            width: 250px;
+            overflow: visible;
+        }
+
+        .main-menu {
+            background: #fbfbfb;
+            border-right: 1px solid #e5e5e5;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            height: 100%;
+            left: 0;
+            width: 60px;
+            overflow: hidden;
+            -webkit-transition: width .05s linear;
+            transition: width .05s linear;
+            -webkit-transform: translateZ(0) scale(1, 1);
+            z-index: 1000;
+        }
+
+        .main-menu > ul {
+            margin: 7px 0;
+        }
+
+        .main-menu li {
+            position: relative;
+            display: block;
+            width: 250px;
+        }
+
+        .main-menu li > a {
+            position: relative;
+            display: table;
+            border-collapse: collapse;
+            border-spacing: 0;
+            color: #999;
+            font-family: arial;
+            font-size: 14px;
+            text-decoration: none;
+            -webkit-transform: translateZ(0) scale(1, 1);
+            -webkit-transition: all .1s linear;
+            transition: all .1s linear;
+
+        }
+
+        .main-menu .nav-icon {
+            position: relative;
+            display: table-cell;
+            width: 60px;
+            height: 36px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 18px;
+        }
+
+        .main-menu .nav-text {
+            position: relative;
+            display: table-cell;
+            vertical-align: middle;
+            width: 190px;
+            font-family: 'Titillium Web', sans-serif;
+        }
+
+        .main-menu > ul.logout {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+        }
+
+        .no-touch .scrollable.hover {
+            overflow-y: hidden;
+        }
+
+        .no-touch .scrollable.hover:hover {
+            overflow-y: auto;
+            overflow: visible;
+        }
+
+        a:hover, a:focus {
+            text-decoration: none;
+        }
+
+        nav {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -o-user-select: none;
+            user-select: none;
+        }
+
+        nav ul, nav li {
+            outline: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .main-menu li:hover > a, nav.main-menu li.active > a, .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus, .dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus, .no-touch .dashboard-page nav.dashboard-menu ul li:hover a, .dashboard-page nav.dashboard-menu ul li.active a {
+            color: #fff;
+            background-color: #5fa2db;
+        }
+
+        .area {
+            float: left;
+            background: #e2e2e2;
+            width: 100%;
+            height: 100%;
+        }
+
+        @font-face {
+            font-family: 'Titillium Web';
+            font-style: normal;
+            font-weight: 300;
+            src: local('Titillium WebLight'), local('TitilliumWeb-Light'), url(http://themes.googleusercontent.com/static/fonts/titilliumweb/v2/anMUvcNT0H1YN4FII8wpr24bNCNEoFTpS2BTjF6FB5E.woff) format('woff');
+        }
+
+        .darkClass {
+            background-color: #e2e2e2;
+        }
+
+        .selectSet {
+        }
+
+        .selectId {
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-fixed-top">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">Select Topics</a>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right btn-success" >
-                    <li id="li1" style="margin:5px"><a style="color:white" href="#" >All funders</a></li>
-                    <li id="li2" style="margin:5px"><a style="color:white" href="#" >WT</a></li>
-                    <li id="li3" style="margin:5px"><a style="color:white" href="#" >FP7</a></li>
-                    <li id="li4" style="margin:5px"><a style="color:white" href="#" >NIH</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <div class="col-xs-5" id="from" style="padding-top: 70px">
-        <select name="from[]" id="undo_redo" class="form-control" size="30" multiple="multiple">
-<!--            <option value="1">C++</option>-->
-<!--            <option value="2">C#</option>-->
-<!--            <option value="3">Haskell</option>-->
-<!--            <option value="4">Java</option>-->
-<!--            <option value="5">JavaScript</option>-->
-<!--            <option value="6">Lisp</option>-->
-<!--            <option value="7">Lua</option>-->
-<!--            <option value="8">MATLAB</option>-->
-<!--            <option value="9">NewLISP</option>-->
-<!--            <option value="10">PHP</option>-->
-<!--            <option value="11">Perl</option>-->
-<!--            <option value="12">SQL</option>-->
-<!--            <option value="13">Unix shell</option>-->
-        </select>
-    </div>
+<div class="area" style="padding-top:10px;margin-left:60px">
+    <span><b>&nbsp;&nbsp;&nbsp;Scholarly Communication &amp; Research Analytics</b></span>
+</div>
+<div class="col-xs-1" style="padding-top:50px">
+</div>
+<div id="experimentDiv">
+    Select experiment: <br/>
+    <select>
+        <option>ACM_400T_1000IT_6000CHRs_150_40PRN100B_4M_4TH_cosNoPPR</option>
+        <option>ACM_400T_950IT_6000CHRs_150_40PRN100B_4M_4TH_cosWVNoPPR</option>
+    </select>
+</div>
 
-    <div class="col-xs-2" style="padding-top: 70px;">
-        <button type="button" id="undo_redo_undo" class="btn btn-primary btn-block">undo</button>
-        <button type="button" id="undo_redo_rightAll" class="btn btn-default btn-block"><i class="glyphicon glyphicon-forward"></i></button>
-        <button type="button" id="undo_redo_rightSelected" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
-        <button type="button" id="undo_redo_leftSelected" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
-        <button type="button" id="undo_redo_leftAll" class="btn btn-default btn-block"><i class="glyphicon glyphicon-backward"></i></button>
-        <button type="button" id="undo_redo_redo" class="btn btn-warning btn-block">redo</button>
-    </div>
+<div id="setDiv" class="col-xs-1" style="display: none;">
+    Select Set: <br/>
+    <select>
+        <option>topics</option>
+        <option>authors</option>
+    </select>
+</div>
+<div id="similarityDiv" class="col-xs-1" style="display: none;">
+    Select Similarity: <br/>
+    <select>
+        <option>0.5</option>
+        <option>0.6</option>
+        <option>0.7</option>
+        <option>0.8</option>
+        <option selected>0.9</option>
+        <option>1</option>
+    </select>
+</div>
+<div id="trendDiv" style="display: none;">
+    Select Trend visualization type: <br/>
+    <select>
+        <option selected>stream</option>
+        <option>area</option>
+        <option>line</option>
+    </select>
+</div>
+<nav class="main-menu">
+    <ul id="list">
+        <li id="m1">
+            <a href="#">
+                <i class="fa fa-home fa-2x"></i>
+                        <span class="nav-text">
+                            Home Page
+                        </span>
+            </a>
 
-    <div class="col-xs-5" id="to" style="padding-top: 70px">
-        <select name="to[]" id="undo_redo_to" class="form-control" size="30" multiple="multiple"></select>
-    </div>
+        </li>
+        <li id="m2" class="has-subnav">
+            <a href="#">
+                <i class="fa fa-list fa-2x"></i>
+                        <span class="nav-text">
+                            Experiments' Page
+                        </span>
+            </a>
+
+        </li>
+        <li id="m3">
+            <a href="#">
+                <i class="fa fa-connectdevelop fa-2x"></i>
+                        <span class="nav-text">
+                            Spider Graph
+                        </span>
+            </a>
+        </li>
+        <li id="m4">
+            <a href="#">
+                <i class="fa fa-area-chart fa-2x"></i>
+                        <span class="nav-text">
+                            Trends Visualization
+                        </span>
+            </a>
+        </li>
+        <li id="m5">
+            <a href="#">
+                <i class="fa fa-cloud fa-2x"></i>
+                        <span class="nav-text">
+                            Cloud Visualization
+                        </span>
+            </a>
+        </li>
+
+        <!--<li class="has-subnav">-->
+        <!--<a href="#">-->
+        <!--<i class="fa fa-folder-open fa-2x"></i>-->
+        <!--<span class="nav-text">-->
+        <!--Pages-->
+        <!--</span>-->
+        <!--</a>-->
+
+        <!--</li>-->
+        <li id="m6">
+            <a href="#">
+                <i class="fa fa-table fa-2x"></i>
+                        <span class="nav-text">
+                            Excel Sheets
+                        </span>
+            </a>
+        </li>
+        <li id="m7">
+            <a href="#">
+                <i class="fa fa-info fa-2x"></i>
+                        <span class="nav-text">
+                            Documentation
+                        </span>
+            </a>
+        </li>
+    </ul>
+
+    <!--<ul class="logout">-->
+    <!--<li>-->
+    <!--<a href="#">-->
+    <!--<i class="fa fa-power-off fa-2x"></i>-->
+    <!--<span class="nav-text">-->
+    <!--Logout-->
+    <!--</span>-->
+    <!--</a>-->
+    <!--</li>-->
+    <!--</ul>-->
+</nav>
+
+<div id="idDiv" style="padding-top: 70px;margin-left:100px"></div>
+
+<div class="col-xs-4" id="from" style="margin-left:100px">
+    <select name="from[]" id="undo_redo" class="form-control darkClass" size="30" multiple="multiple">
+        <!--<option value="1">C++</option>-->
+        <!--<option value="2">C#</option>-->
+        <!--<option value="3">Haskell</option>-->
+        <!--<option value="4">Java</option>-->
+        <!--<option value="5">JavaScript</option>-->
+        <!--<option value="6">Lisp</option>-->
+        <!--<option value="7">Lua</option>-->
+        <!--<option value="8">MATLAB</option>-->
+        <!--<option value="9">NewLISP</option>-->
+        <!--<option value="10">PHP</option>-->
+        <!--<option value="11">Perl</option>-->
+        <!--<option value="12">SQL</option>-->
+        <!--<option value="13">Unix shell</option>-->
+    </select>
+</div>
+
+<div class="col-xs-2">
+    <button type="button" id="undo_redo_undo" class="btn btn-primary btn-block">undo</button>
+    <button type="button" id="undo_redo_rightAll" class="btn btn-default btn-block"><i
+            class="glyphicon glyphicon-forward"></i></button>
+    <button type="button" id="undo_redo_rightSelected" class="btn btn-default btn-block"><i
+            class="glyphicon glyphicon-chevron-right"></i></button>
+    <button type="button" id="undo_redo_leftSelected" class="btn btn-default btn-block"><i
+            class="glyphicon glyphicon-chevron-left"></i></button>
+    <button type="button" id="undo_redo_leftAll" class="btn btn-default btn-block"><i
+            class="glyphicon glyphicon-backward"></i></button>
+    <button type="button" id="undo_redo_redo" class="btn btn-warning btn-block">redo</button>
+    <br/><br/>
+    <button type="button" id="go" class="btn btn-success btn-block">Visualize It!</button>
+</div>
+
+<div class="col-xs-4" id="to">
+    <select name="to[]" id="undo_redo_to" class="form-control darkClass" size="30" multiple="multiple"></select>
+</div>
 
 
-    <script type="text/javascript" src="../../../js/d3.js"></script>
-    <script type="text/javascript" src="../../../js/jquery.js"></script>
-    <script type="text/javascript" src="../../../js/bootstrap.js"></script>
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/bootstrap.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
-<script type="text/javascript" src="../../../js/multiselect.min.js"></script>
+<script type="text/javascript" src="../js/multiselect.min.js"></script>
 
 <script>
     var experiment;
     var topics;
-    var listOfTopicIds=[];
-    var listOfTopics={};
+    var listOfTopicIds = [];
+    var listOfTopics = {};
     listOfTopicIds.push("123");
     listOfTopicIds.push("234");
 
     loadFromUrlParametersAndServer();
 
-    //    trendsFile = "../data/"+layoutId+".csv";
-    topicsFile = "../data/topics.csv";             // needed for the trend visualization
+    var url = "http://localhost:3001/getExperiments";
+    ajaxCall(url);
 
-    // if all topics json files don't exist then we need to make a server call else we get them from the json file immediately
-    topicsFileExist  = UrlExists(topicsFile);
-    if (!topicsFileExist) {
-        ajaxTopicsCall(experiment);
-    }
+    $("#m1").on("click", function (d) {
+        $("#m1").parent().children().removeClass("active");
+        $("#m1").addClass("active");
 
-    $(document).ready(function($) {
-        d3.csv(topicsFile, function (error, data) {
-            $.each(data,function (i,d) {
+        $("#similarityDiv").hide();
+        $("#trendDiv").hide();
+        $("#setDiv").hide();
+        $(".form-control").addClass("darkClass");
+    });
+    $("#m2").on("click", function (d) {
+        $("#m2").parent().children().removeClass("active");
+        $("#m2").addClass("active");
+
+        $("#similarityDiv").hide();
+        $("#trendDiv").hide();
+        $("#setDiv").hide();
+        $(".form-control").addClass("darkClass");
+    });
+    $("#m3").on("click", function (d) {
+        $("#m3").parent().children().removeClass("active");
+        $("#m3").addClass("active");
+
+        $("#setDiv>select").empty();
+        $("#setDiv>select").append($("<option></option>").attr("id", "set1").attr("value", "topics").text("topics"));
+        $("#setDiv>select").append($("<option></option>").attr("id", "set2").attr("value", "authors").text("authors"));
+        $("#setDiv").show();
+
+        $("#similarityDiv").hide();
+        $("#set1").on("click", function () {
+            $("#set1").addClass("selectSet");
+            $("#set2").removeClass("selectSet");
+            $("#set3").removeClass("selectSet");
+            $("#set4").removeClass("selectSet");
+            $("#set5").removeClass("selectSet");
+            $("#similarityDiv").hide();
+        });
+        $("#set2").on("click", function () {
+            $("#set1").removeClass("selectSet");
+            $("#set2").addClass("selectSet");
+            $("#set3").removeClass("selectSet");
+            $("#set4").removeClass("selectSet");
+            $("#set5").removeClass("selectSet");
+            $("#similarityDiv").show();
+        });
+
+        $("#trendDiv").hide();
+        $(".form-control").removeClass("darkClass");
+    });
+    $("#m4").on("click", function (d) {
+        $("#m4").parent().children().removeClass("active");
+        $("#m4").addClass("active");
+
+        $("#setDiv>select").empty();
+        $("#setDiv>select").append($("<option></option>").attr("id", "set3").attr("value", "journal").text("journal"));
+        $("#setDiv>select").append($("<option></option>").attr("id", "set4").attr("value", "conference").text("conference"));
+        $("#setDiv>select").append($("<option></option>").attr("id", "set5").attr("value", "corpus").text("corpus"));
+        $("#setDiv").show();
+
+        $(".form-control").removeClass("darkClass");
+        $("#set3").on("click", function () {
+            $("#set1").removeClass("selectSet");
+            $("#set2").removeClass("selectSet");
+            $("#set3").addClass("selectSet");
+            $("#set4").removeClass("selectSet");
+            $("#set5").removeClass("selectSet");
+            $(".form-control").removeClass("darkClass");
+        });
+        $("#set4").on("click", function () {
+            $("#set1").removeClass("selectSet");
+            $("#set2").removeClass("selectSet");
+            $("#set3").removeClass("selectSet");
+            $("#set4").addClass("selectSet");
+            $("#set5").removeClass("selectSet");
+            $(".form-control").removeClass("darkClass");
+        });
+        $("#set5").on("click", function () {
+            $("#set1").removeClass("selectSet");
+            $("#set2").removeClass("selectSet");
+            $("#set3").removeClass("selectSet");
+            $("#set4").removeClass("selectSet");
+            $("#set5").addClass("selectSet");
+            $(".form-control").addClass("darkClass");
+        });
+
+        $("#similarityDiv").hide();
+        $("#trendDiv").show();
+    });
+    $("#m5").on("click", function (d) {
+        $("#m5").parent().children().removeClass("active");
+        $("#m5").addClass("active");
+
+        $("#similarityDiv").hide();
+        $("#trendDiv").hide();
+        $("#setDiv").hide();
+        $(".form-control").removeClass("darkClass");
+    });
+    $("#m6").on("click", function (d) {
+        $("#m6").parent().children().removeClass("active");
+        $("#m6").addClass("active");
+
+        $("#similarityDiv").hide();
+        $("#trendDiv").hide();
+        $("#setDiv").hide();
+        $(".form-control").addClass("darkClass");
+    });
+    $("#m7").on("click", function (d) {
+        $("#m7").parent().children().removeClass("active");
+        $("#m7").addClass("active");
+
+        $("#similarityDiv").hide();
+        $("#trendDiv").hide();
+        $("#setDiv").hide();
+        $(".form-control").addClass("darkClass");
+    });
+
+    $("#go").on("click", function () {
+
+        url = "http://localhost:3001/";
+
+        if ($(".active").attr("id") == "m3") {
+            url += "getSpider?ex=" + $("#experimentDiv>select>option:selected").val() + "&set=" + $("#setDiv>select>option:selected").val() + "&s=" + $("#similarityDiv>select>option:selected").val();
+            console.log(url)
+        }
+        else if ($(".active").attr("id") == "m4") {
+            url += "getTrends?ex=" + $("#experimentDiv>select>option:selected").val() + "&set=" + $("#setDiv>select>option:selected").val() + "&type=" + $("#trendDiv>select>option:selected").val();
+            console.log(url)
+        }
+        else if ($(".active").attr("id") == "m5") {
+            url += "getCloud?ex=" + $("#experimentDiv>select>option:selected").val();
+            console.log(url)
+        }
+        else {
+            url = "#";
+            console.log(url)
+        }
+//        ajaxCall(url);
+//        var selected = $('#undo_redo_to').multiselect("leftAll").children();
+//        selected.each(function (i, d) {
+//            url += d.id + ","
+//        });
+//        console.log(url);
+////            window.location.replace(url);
+//        window.open(url, '_blank');
+    });
+
+    function fillForm() {
+        d3.json(response, function (error, data) {
+            $.each(data, function (i, d) {
                 listOfTopics[i] = {
                     id: d.TopicId,
                     title: d.Title
                 }; //value # of publications
 
                 $('#undo_redo')
-                    .append("<option value=\""+i+"\" id=\""+d.TopicId+"\" title=\""+d.Title+"\"> "+d.Title+"</option>");
+                        .append("<option value=\"" + i + "\" id=\"" + d.TopicId + "\" title=\"" + d.Title + "\"> " + d.Title + "</option>");
             });
         });
 
-        $("#li1").on("click",function() {
-            var url="./trends.php?id=allfunder&type=stream&topics=";
+        $("#go").on("click", function () {
+            url = "http://localhost:3001/getExperiments";
+            console.log($(".active").attr("id"))
+            ajaxCall(url);
             var selected = $('#undo_redo_to').multiselect("leftAll").children();
-            selected.each(function(i,d){
-                url += d.id+","
-            });
-            console.log(url);
-//            window.location.replace(url);
-            window.open(url, '_blank');
-        });
-
-        $("#li2").on("click",function() {
-            var url="./trends.php?id=wt&type=stream&topics=";
-            var selected = $('#undo_redo_to').multiselect("leftAll").children();
-            selected.each(function(i,d){
-                url += d.id+","
-            });
-            console.log(url);
-//            window.location.replace(url);
-            window.open(url, '_blank');
-        });
-
-        $("#li3").on("click",function() {
-            var url="./trends.php?id=fp7&type=stream&topics=";
-            var selected = $('#undo_redo_to').multiselect("leftAll").children();
-            selected.each(function(i,d){
-                url += d.id+","
-            });
-            console.log(url);
-//            window.location.replace(url);
-            window.open(url, '_blank');
-        });
-
-        $("#li4").on("click",function() {
-            var url="./trends.php?id=nih&type=stream&topics=";
-            var selected = $('#undo_redo_to').multiselect("leftAll").children();
-            selected.each(function(i,d){
-                url += d.id+","
+            selected.each(function (i, d) {
+                url += d.id + ","
             });
             console.log(url);
 //            window.location.replace(url);
@@ -150,103 +512,49 @@
         $('#undo_redo').multiselect({
             search: {
                 left: '<input type="text" name="q" class="form-control" placeholder="Search..."/>',
-                right: '<input type="text" name="q" class="form-control" placeholder="Search..."/>',
+                right: '<input type="text" name="q" class="form-control" placeholder="Search..."/>'
             }
         });
-    });
+    }
 
     /* function returns 1 if an array contains an object or 0 if not */
     function include(arr, obj) {
         return (arr.indexOf(obj) != -1);
     }
 
-    function loadFromUrlParametersAndServer(){
+    function loadFromUrlParametersAndServer() {
 //                $set_elems = array("00010782","01635948","00045411","01635808","03621340","00978930");
 
-        if((experiment = getUrlParameter('ex')) == null){
-            experiment = '<?php echo $experimentName ;?>';
+        if ((experiment = getUrlParameter('ex')) == null) {
+            experiment = 'ACM_400T_1000IT_6000CHRs_150_40PRN100B_4M_4TH_cosNoPPR';
         }
 
-        if((layoutId = getUrlParameter('id')) == null){         //default
-            layoutId = '<?php echo $layoutId ;?>';
-        }
-
-        if((layoutType = getUrlParameter('type')) == null){
-            layoutType = '<?php echo $layoutType ;?>';
-        }
-
-        if((topicsSort = getUrlParameter('sort')) == null){
-            topicsSort = '<?php echo $topicsSort ;?>';
+        if ((layoutId = getUrlParameter('id')) == null) {         //default
+            layoutId = '32';
         }
     }
 
     function getUrlParameter(name) {
-        return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
+        return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null
     }
 
 
-    function ajaxTopicsCall(experiment) {
-        console.log("ajaxCall for topics layout: " + experiment);
-        var url = "./topics.php";
+    function ajaxCall(url) {
+        console.log("ajaxCall for layout: " + experiment);
 
-
-        //todo na ta metaferw server side http://stackoverflow.com/questions/10649419/pivot-tables-php-mysql
         return $.ajax({
             type: "GET",
             async: true,
             url: url,
-            data: "ex=" + experiment,
             success: function (resp) {
-                jsonTopicsLayout = JSON.parse(resp);
-                topics = jsonTopicsLayout.topics;
-                topicsNoSort = jsonTopicsLayout.topicsNoSort;
+                console.log(resp);
+                response = JSON.parse(resp).response;
+                fillForm();
             },
             error: function (e) {
                 alert('Error: ' + JSON.stringify(e));
             }
         });
-    }
-
-    function dothework(response) {
-        //todo na ta metaferw server side http://stackoverflow.com/questions/10649419/pivot-tables-php-mysql
-        var result = pivot(response[0], ['year'], ['id'], {});
-        var line;
-        line = "quarter";
-        for (var k = 0; k < result.columnHeaders.length; k++) {
-            line += "," + result.columnHeaders[k];
-//            columns.push(parseInt(result.columnHeaders[k]));
-        }
-
-        for (var i = 0; i < result.rowHeaders.length; i++) {
-            line += "\n" + result.rowHeaders[i];
-            for (var j = 0; j < result.columnHeaders.length; j++) {
-
-                if (result[i][j] !== undefined)
-                    line += "," + result[i][j][0].weight;
-                else
-                    line += ",0"
-            }
-        }
-        console.log(line)
-
-        $.ajax({
-            type: "POST",
-            async: true,
-            url: "./fileCreator.php",
-            dataType: 'text',		// this is json if we put it like this JSON object
-            data: {
-                /*        json : JSON.stringify(jsonObject) /* convert here only */
-                func: "csv",
-                csv: line,
-                id: layoutId      // id for distinguishing trends
-            },
-            success: function () {
-                console.log("CSV file Created")
-            },
-            error: function (e) {
-                console.log("Error in file Creation:" + e);
-            }
-        })
     }
 
     function UrlExists(url) {

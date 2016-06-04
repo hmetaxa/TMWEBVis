@@ -23,11 +23,11 @@ restapi.get('/getExperiments', function (req, res) {
     var rowset = db.all(query, function (err, row) {
         for (var i = 0; i < row.length; i++) {
             data.push({
-                "id": row[i].ExperimentId,
-                "desc": row[i].Description,
-                "Metadata": row[i].Metadata,
-                "initialSimilarity": row[i].InitialSimilarity,
-                "PhraseBoost": row[i].PhraseBoost
+                "id": row[i].experimentId,
+                "desc": row[i].description,
+                "Metadata": row[i].metadata,
+                "initialSimilarity": row[i].initialSimilarity,
+                "PhraseBoost": row[i].phraseBoost
             })
         }
         res.json({"response": data})

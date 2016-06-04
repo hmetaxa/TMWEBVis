@@ -1,0 +1,103 @@
+body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+}
+
+#hover-cap-4col .thumbnail, #hover-cap-3col .thumbnail, #hover-cap-unique .thumbnail, #hover-cap-6col .thumbnail {
+    position: relative;
+    overflow: hidden;
+}
+
+.caption {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.4);
+    width: 100%;
+    height: 100%;
+    color: #fff !important;
+}
+
+.caption p {
+    padding: 6px;
+}
+
+a {
+    color: white;
+}
+
+a:hover {
+    color: gold;
+}
+
+/* padding-bottom and top for image */
+.mfp-no-margins img.mfp-img {
+    padding: 0;
+}
+
+/* position of shadow behind the image */
+.mfp-no-margins .mfp-figure:after {
+    top: 0;
+    bottom: 0;
+}
+
+/* padding for main container */
+.mfp-no-margins .mfp-container {
+    padding: 0;
+}
+
+/*
+
+for zoom animation
+uncomment this part if you haven't added this code anywhere else
+
+*/
+
+.mfp-with-zoom .mfp-container,
+.mfp-with-zoom.mfp-bg {
+    opacity: 0;
+    -webkit-backface-visibility: hidden;
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+}
+
+.mfp-with-zoom.mfp-ready .mfp-container {
+    opacity: 1;
+}
+
+.mfp-with-zoom.mfp-ready.mfp-bg {
+    opacity: 0.8;
+}
+
+.mfp-with-zoom.mfp-removing .mfp-container,
+.mfp-with-zoom.mfp-removing.mfp-bg {
+    opacity: 0;
+}
+
+#overlay {
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: #f00;
+    filter: alpha(opacity=10);
+    -moz-opacity: 0.1;
+    opacity: 0.1;
+    cursor: pointer;
+
+}
+
+.dialog {
+    position: absolute;
+    border: 2px solid #3366CC;
+    width: 250px;
+    height: 120px;
+    background-color: #ffffff;
+    z-index: 12;
+}
+

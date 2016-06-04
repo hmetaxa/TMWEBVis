@@ -454,7 +454,7 @@
 
     $("#go").on("click", function () {
 
-        url = "http://localhost:3001/";
+        url = "http://prozac.madgik.di.uoa.gr:3003/";
 
         if ($(".active").attr("id") == "m3") {
             url += "getSpider?ex=" + $("#experimentDiv>select>option:selected").val() + "&set=" + $("#setDiv>select>option:selected").val() + "&s=" + $("#similarityDiv>select>option:selected").val();
@@ -484,6 +484,8 @@
 
     function fillForm() {
         d3.json(response, function (error, data) {
+            console.log("data=")
+            console.log(data)
             $.each(data, function (i, d) {
                 listOfTopics[i] = {
                     id: d.TopicId,
@@ -496,9 +498,9 @@
         });
 
         $("#go").on("click", function () {
-            url = "http://localhost:3001/getExperiments";
+            url = "http://prozac.madgik.di.uoa.gr:3003/getExperiments";
             console.log($(".active").attr("id"))
-            ajaxCall(url);
+//            ajaxCall(url);
             var selected = $('#undo_redo_to').multiselect("leftAll").children();
             selected.each(function (i, d) {
                 url += d.id + ","
@@ -552,7 +554,7 @@
                 fillForm();
             },
             error: function (e) {
-                alert('Error: ' + JSON.stringify(e));
+                console.log('Error: ' + JSON.stringify(e));
             }
         });
     }

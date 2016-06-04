@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link href="../css/bootstrap.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../css/prettify.css"/>
+    <link rel="stylesheet" href="../css/stylemultiselect.css"/>
+    <style>
+        @import url(//netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.css);
+        @import url(http://fonts.googleapis.com/css?family=Titillium+Web:300);
+
+        .fa-2x {
+            font-size: 2em;
+        }
+
+        .fa {
+            position: relative;
+            display: table-cell;
+            width: 60px;
+            height: 36px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 20px;
+        }
+
+        .main-menu:hover, nav.main-menu.expanded {
+            width: 250px;
+            overflow: visible;
+        }
+
+        .main-menu {
+            background: #fbfbfb;
+            border-right: 1px solid #e5e5e5;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            height: 100%;
+            left: 0;
+            width: 60px;
+            overflow: hidden;
+            -webkit-transition: width .05s linear;
+            transition: width .05s linear;
+            -webkit-transform: translateZ(0) scale(1, 1);
+            z-index: 1000;
+        }
+
+        .main-menu > ul {
+            margin: 7px 0;
+        }
+
+        .main-menu li {
+            position: relative;
+            display: block;
+            width: 250px;
+        }
+
+        .main-menu li > a {
+            position: relative;
+            display: table;
+            border-collapse: collapse;
+            border-spacing: 0;
+            color: #999;
+            font-family: arial;
+            font-size: 14px;
+            text-decoration: none;
+            -webkit-transform: translateZ(0) scale(1, 1);
+            -webkit-transition: all .1s linear;
+            transition: all .1s linear;
+
+        }
+
+        .main-menu .nav-icon {
+            position: relative;
+            display: table-cell;
+            width: 60px;
+            height: 36px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 18px;
+        }
+
+        .main-menu .nav-text {
+            position: relative;
+            display: table-cell;
+            vertical-align: middle;
+            width: 190px;
+            font-family: 'Titillium Web', sans-serif;
+        }
+
+        .main-menu > ul.logout {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+        }
+
+        .no-touch .scrollable.hover {
+            overflow-y: hidden;
+        }
+
+        .no-touch .scrollable.hover:hover {
+            overflow-y: auto;
+            overflow: visible;
+        }
+
+        a:hover, a:focus {
+            text-decoration: none;
+        }
+
+        nav {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -o-user-select: none;
+            user-select: none;
+        }
+
+        nav ul, nav li {
+            outline: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .main-menu li:hover > a, nav.main-menu li.active > a, .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus, .dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus, .no-touch .dashboard-page nav.dashboard-menu ul li:hover a, .dashboard-page nav.dashboard-menu ul li.active a {
+            color: #fff;
+            background-color: #5fa2db;
+        }
+
+        .area {
+            float: left;
+            background: #e2e2e2;
+            width: 100%;
+            height: 100%;
+        }
+
+        @font-face {
+            font-family: 'Titillium Web';
+            font-style: normal;
+            font-weight: 300;
+            src: local('Titillium WebLight'), local('TitilliumWeb-Light'), url(http://themes.googleusercontent.com/static/fonts/titilliumweb/v2/anMUvcNT0H1YN4FII8wpr24bNCNEoFTpS2BTjF6FB5E.woff) format('woff');
+        }
+
+        .darkClass {
+            background-color: #e2e2e2;
+        }
+
+        .selectSet {
+        }
+
+        .selectId {
+        }
+    </style>
+</head>
+<body>
+<div class="area" style="padding-top:10px;margin-left:60px">
+    <span><b>&nbsp;&nbsp;&nbsp;Scholarly Communication &amp; Research Analytics</b></span>
+</div>
+<div class="col-xs-1" style="padding-top:50px">
+</div>
+<div id="experimentDiv">
+    Select experiment: <br/>
+    <select>
+        <option>ACM_400T_1000IT_6000CHRs_150_40PRN100B_4M_4TH_cosNoPPR</option>
+        <option>ACM_400T_950IT_6000CHRs_150_40PRN100B_4M_4TH_cosWVNoPPR</option>
+    </select>
+</div>
+
+<div id="setDiv" class="col-xs-1" style="display: none;">
+    Select Set: <br/>
+    <select>
+        <option>topics</option>
+        <option>authors</option>
+    </select>
+</div>
+<div id="similarityDiv" class="col-xs-1" style="display: none;">
+    Select Similarity: <br/>
+    <select>
+        <option>0.5</option>
+        <option>0.6</option>
+        <option>0.7</option>
+        <option>0.8</option>
+        <option selected>0.9</option>
+        <option>1</option>
+    </select>
+</div>
+<div id="trendDiv" style="display: none;">
+    Select Trend visualization type: <br/>
+    <select>
+        <option selected>stream</option>
+        <option>area</option>
+        <option>line</option>
+    </select>
+</div>
+<nav class="main-menu">
+    <ul id="list">
+        <li id="m1">
+            <a href="#">
+                <i class="fa fa-home fa-2x"></i>
+                        <span class="nav-text">
+                            Home Page
+                        </span>
+            </a>
+
+        </li>
+        <li id="m2" class="has-subnav">
+            <a href="#">
+                <i class="fa fa-list fa-2x"></i>
+                        <span class="nav-text">
+                            Experiments' Page
+                        </span>
+            </a>
+
+        </li>
+        <li id="m3">
+            <a href="#">
+                <i class="fa fa-connectdevelop fa-2x"></i>
+                        <span class="nav-text">
+                            Spider Graph
+                        </span>
+            </a>
+        </li>
+        <li id="m4">
+            <a href="#">
+                <i class="fa fa-area-chart fa-2x"></i>
+                        <span class="nav-text">
+                            Trends Visualization
+                        </span>
+            </a>
+        </li>
+        <li id="m5">
+            <a href="#">
+                <i class="fa fa-cloud fa-2x"></i>
+                        <span class="nav-text">
+                            Cloud Visualization
+                        </span>
+            </a>
+        </li>
+
+        <!--<li class="has-subnav">-->
+        <!--<a href="#">-->
+        <!--<i class="fa fa-folder-open fa-2x"></i>-->
+        <!--<span class="nav-text">-->
+        <!--Pages-->
+        <!--</span>-->
+        <!--</a>-->
+
+        <!--</li>-->
+        <li id="m6">
+            <a href="#">
+                <i class="fa fa-table fa-2x"></i>
+                        <span class="nav-text">
+                            Excel Sheets
+                        </span>
+            </a>
+        </li>
+        <li id="m7">
+            <a href="#">
+                <i class="fa fa-info fa-2x"></i>
+                        <span class="nav-text">
+                            Documentation
+                        </span>
+            </a>
+        </li>
+    </ul>
+
+    <!--<ul class="logout">-->
+    <!--<li>-->
+    <!--<a href="#">-->
+    <!--<i class="fa fa-power-off fa-2x"></i>-->
+    <!--<span class="nav-text">-->
+    <!--Logout-->
+    <!--</span>-->
+    <!--</a>-->
+    <!--</li>-->
+    <!--</ul>-->
+</nav>
+
+<div id="idDiv" style="padding-top: 70px;margin-left:100px"></div>
+
+<div class="col-xs-4" id="from" style="margin-left:100px">
+    <select name="from[]" id="undo_redo" class="form-control darkClass" size="30" multiple="multiple">
+        <!--<option value="1">C++</option>-->
+        <!--<option value="2">C#</option>-->
+        <!--<option value="3">Haskell</option>-->
+        <!--<option value="4">Java</option>-->
+        <!--<option value="5">JavaScript</option>-->
+        <!--<option value="6">Lisp</option>-->
+        <!--<option value="7">Lua</option>-->
+        <!--<option value="8">MATLAB</option>-->
+        <!--<option value="9">NewLISP</option>-->
+        <!--<option value="10">PHP</option>-->
+        <!--<option value="11">Perl</option>-->
+        <!--<option value="12">SQL</option>-->
+        <!--<option value="13">Unix shell</option>-->
+    </select>
+</div>
+
+<div class="col-xs-2">
+    <button type="button" id="undo_redo_undo" class="btn btn-primary btn-block">undo</button>
+    <button type="button" id="undo_redo_rightAll" class="btn btn-default btn-block"><i
+            class="glyphicon glyphicon-forward"></i></button>
+    <button type="button" id="undo_redo_rightSelected" class="btn btn-default btn-block"><i
+            class="glyphicon glyphicon-chevron-right"></i></button>
+    <button type="button" id="undo_redo_leftSelected" class="btn btn-default btn-block"><i
+            class="glyphicon glyphicon-chevron-left"></i></button>
+    <button type="button" id="undo_redo_leftAll" class="btn btn-default btn-block"><i
+            class="glyphicon glyphicon-backward"></i></button>
+    <button type="button" id="undo_redo_redo" class="btn btn-warning btn-block">redo</button>
+    <br/><br/>
+    <button type="button" id="go" class="btn btn-success btn-block">Visualize It!</button>
+</div>
+
+<div class="col-xs-4" id="to">
+    <select name="to[]" id="undo_redo_to" class="form-control darkClass" size="30" multiple="multiple"></select>
+</div>
+
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/bootstrap.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+<script type="text/javascript" src="../js/multiselect.min.js"></script>
+
+<script>
+    var experiment;
+    var topics;
+    var listOfTopicIds = [];
+    var listOfTopics = {};
+    listOfTopicIds.push("123");
+    listOfTopicIds.push("234");
+
+    loadFromUrlParametersAndServer();
+
+    var url = "http://localhost:3001/getExperiments";
+    ajaxCall(url);
+
+    $("#m1").on("click", function (d) {
+        $("#m1").parent().children().removeClass("active");
+        $("#m1").addClass("active");
+
+        $("#similarityDiv").hide();
+        $("#trendDiv").hide();
+        $("#setDiv").hide();
+        $(".form-control").addClass("darkClass");
+    });
+    $("#m2").on("click", function (d) {
+        $("#m2").parent().children().removeClass("active");
+        $("#m2").addClass("active");
+
+        $("#similarityDiv").hide();
+        $("#trendDiv").hide();
+        $("#setDiv").hide();
+        $(".form-control").addClass("darkClass");
+    });
+    $("#m3").on("click", function (d) {
+        $("#m3").parent().children().removeClass("active");
+        $("#m3").addClass("active");
+
+        $("#setDiv>select").empty();
+        $("#setDiv>select").append($("<option></option>").attr("id", "set1").attr("value", "topics").text("topics"));
+        $("#setDiv>select").append($("<option></option>").attr("id", "set2").attr("value", "authors").text("authors"));
+        $("#setDiv").show();
+
+        $("#similarityDiv").hide();
+        $("#set1").on("click", function () {
+            $("#set1").addClass("selectSet");
+            $("#set2").removeClass("selectSet");
+            $("#set3").removeClass("selectSet");
+            $("#set4").removeClass("selectSet");
+            $("#set5").removeClass("selectSet");
+            $("#similarityDiv").hide();
+        });
+        $("#set2").on("click", function () {
+            $("#set1").removeClass("selectSet");
+            $("#set2").addClass("selectSet");
+            $("#set3").removeClass("selectSet");
+            $("#set4").removeClass("selectSet");
+            $("#set5").removeClass("selectSet");
+            $("#similarityDiv").show();
+        });
+
+        $("#trendDiv").hide();
+        $(".form-control").removeClass("darkClass");
+    });
+    $("#m4").on("click", function (d) {
+        $("#m4").parent().children().removeClass("active");
+        $("#m4").addClass("active");
+
+        $("#setDiv>select").empty();
+        $("#setDiv>select").append($("<option></option>").attr("id", "set3").attr("value", "journal").text("journal"));
+        $("#setDiv>select").append($("<option></option>").attr("id", "set4").attr("value", "conference").text("conference"));
+        $("#setDiv>select").append($("<option></option>").attr("id", "set5").attr("value", "corpus").text("corpus"));
+        $("#setDiv").show();
+
+        $(".form-control").removeClass("darkClass");
+        $("#set3").on("click", function () {
+            $("#set1").removeClass("selectSet");
+            $("#set2").removeClass("selectSet");
+            $("#set3").addClass("selectSet");
+            $("#set4").removeClass("selectSet");
+            $("#set5").removeClass("selectSet");
+            $(".form-control").removeClass("darkClass");
+        });
+        $("#set4").on("click", function () {
+            $("#set1").removeClass("selectSet");
+            $("#set2").removeClass("selectSet");
+            $("#set3").removeClass("selectSet");
+            $("#set4").addClass("selectSet");
+            $("#set5").removeClass("selectSet");
+            $(".form-control").removeClass("darkClass");
+        });
+        $("#set5").on("click", function () {
+            $("#set1").removeClass("selectSet");
+            $("#set2").removeClass("selectSet");
+            $("#set3").removeClass("selectSet");
+            $("#set4").removeClass("selectSet");
+            $("#set5").addClass("selectSet");
+            $(".form-control").addClass("darkClass");
+        });
+
+        $("#similarityDiv").hide();
+        $("#trendDiv").show();
+    });
+    $("#m5").on("click", function (d) {
+        $("#m5").parent().children().removeClass("active");
+        $("#m5").addClass("active");
+
+        $("#similarityDiv").hide();
+        $("#trendDiv").hide();
+        $("#setDiv").hide();
+        $(".form-control").removeClass("darkClass");
+    });
+    $("#m6").on("click", function (d) {
+        $("#m6").parent().children().removeClass("active");
+        $("#m6").addClass("active");
+
+        $("#similarityDiv").hide();
+        $("#trendDiv").hide();
+        $("#setDiv").hide();
+        $(".form-control").addClass("darkClass");
+    });
+    $("#m7").on("click", function (d) {
+        $("#m7").parent().children().removeClass("active");
+        $("#m7").addClass("active");
+
+        $("#similarityDiv").hide();
+        $("#trendDiv").hide();
+        $("#setDiv").hide();
+        $(".form-control").addClass("darkClass");
+    });
+
+    $("#go").on("click", function () {
+
+        url = "http://prozac.madgik.di.uoa.gr:3003/";
+
+        if ($(".active").attr("id") == "m3") {
+            url += "getSpider?ex=" + $("#experimentDiv>select>option:selected").val() + "&set=" + $("#setDiv>select>option:selected").val() + "&s=" + $("#similarityDiv>select>option:selected").val();
+            console.log(url)
+        }
+        else if ($(".active").attr("id") == "m4") {
+            url += "getTrends?ex=" + $("#experimentDiv>select>option:selected").val() + "&set=" + $("#setDiv>select>option:selected").val() + "&type=" + $("#trendDiv>select>option:selected").val();
+            console.log(url)
+        }
+        else if ($(".active").attr("id") == "m5") {
+            url += "getCloud?ex=" + $("#experimentDiv>select>option:selected").val();
+            console.log(url)
+        }
+        else {
+            url = "#";
+            console.log(url)
+        }
+//        ajaxCall(url);
+//        var selected = $('#undo_redo_to').multiselect("leftAll").children();
+//        selected.each(function (i, d) {
+//            url += d.id + ","
+//        });
+//        console.log(url);
+////            window.location.replace(url);
+//        window.open(url, '_blank');
+    });
+
+    function fillForm() {
+        d3.json(response, function (error, data) {
+            console.log("data=")
+            console.log(data)
+            $.each(data, function (i, d) {
+                listOfTopics[i] = {
+                    id: d.TopicId,
+                    title: d.Title
+                }; //value # of publications
+
+                $('#undo_redo')
+                        .append("<option value=\"" + i + "\" id=\"" + d.TopicId + "\" title=\"" + d.Title + "\"> " + d.Title + "</option>");
+            });
+        });
+
+        $("#go").on("click", function () {
+            url = "http://prozac.madgik.di.uoa.gr:3003/getExperiments";
+            console.log($(".active").attr("id"))
+//            ajaxCall(url);
+            var selected = $('#undo_redo_to').multiselect("leftAll").children();
+            selected.each(function (i, d) {
+                url += d.id + ","
+            });
+            console.log(url);
+//            window.location.replace(url);
+            window.open(url, '_blank');
+        });
+
+        $('#multiselect').multiselect();
+        $('#undo_redo').multiselect({
+            search: {
+                left: '<input type="text" name="q" class="form-control" placeholder="Search..."/>',
+                right: '<input type="text" name="q" class="form-control" placeholder="Search..."/>'
+            }
+        });
+    }
+
+    /* function returns 1 if an array contains an object or 0 if not */
+    function include(arr, obj) {
+        return (arr.indexOf(obj) != -1);
+    }
+
+    function loadFromUrlParametersAndServer() {
+//                $set_elems = array("00010782","01635948","00045411","01635808","03621340","00978930");
+
+        if ((experiment = getUrlParameter('ex')) == null) {
+            experiment = 'ACM_400T_1000IT_6000CHRs_150_40PRN100B_4M_4TH_cosNoPPR';
+        }
+
+        if ((layoutId = getUrlParameter('id')) == null) {         //default
+            layoutId = '32';
+        }
+    }
+
+    function getUrlParameter(name) {
+        return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null
+    }
+
+
+    function ajaxCall(url) {
+        console.log("ajaxCall for layout: " + experiment);
+
+        return $.ajax({
+            type: "GET",
+            async: true,
+            url: url,
+            success: function (resp) {
+                console.log(resp);
+                response = JSON.parse(resp).response;
+                fillForm();
+            },
+            error: function (e) {
+                console.log('Error: ' + JSON.stringify(e));
+            }
+        });
+    }
+
+    function UrlExists(url) {
+        var http = new XMLHttpRequest();
+        http.open('HEAD', url, false);
+        http.send();
+        return http.status != 404;
+    }
+
+</script>
+</body>
+</html>

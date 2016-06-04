@@ -1,6 +1,6 @@
 var sqlite3 = require('sqlite3').verbose();
-// var db = new sqlite3.Database('/data/PTMDB_ACM2016.db');
-var db = new sqlite3.Database('/Users/nmpegetis/Sites/astero.di.uoa.gr/graphs/dbs/new/PTMDB_ACM2016.db');
+var db = new sqlite3.Database('/data/PTMDB_ACM2016.db');
+// var db = new sqlite3.Database('/Users/nmpegetis/Sites/astero.di.uoa.gr/graphs/dbs/new/PTMDB_ACM2016.db');
 // var db = new sqlite3.Database('/data/PTM3DB_oct15.db');
 var queries = require("./config.js");
 

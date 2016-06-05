@@ -334,7 +334,7 @@
 
     loadFromUrlParametersAndServer();
 
-    var url = "http://prozac.madgik.di.uoa.gr:3003/getExperiments";
+    var url = "http://prozac.madgik.di.uoa.gr:3001/getExperiments";
     ajaxCall(url);
 
     $("#m1").on("click", function (d) {
@@ -454,7 +454,7 @@
 
     $("#go").on("click", function () {
 
-        url = "http://prozac.madgik.di.uoa.gr:3003/";
+        url = "http://prozac.madgik.di.uoa.gr:3001/";
 
         if ($(".active").attr("id") == "m3") {
             url += "getSpider?ex=" + $("#experimentDiv>select>option:selected").val() + "&set=" + $("#setDiv>select>option:selected").val() + "&s=" + $("#similarityDiv>select>option:selected").val();
@@ -498,7 +498,7 @@
         });
 
         $("#go").on("click", function () {
-            url = "http://prozac.madgik.di.uoa.gr:3003/getExperiments";
+            url = "http://prozac.madgik.di.uoa.gr:3001/getExperiments";
             console.log($(".active").attr("id"))
 //            ajaxCall(url);
             var selected = $('#undo_redo_to').multiselect("leftAll").children();

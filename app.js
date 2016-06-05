@@ -13,8 +13,13 @@ var queries = require("./config.js");
 var express = require('express');
 var restapi = express();
 
+restapi.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
-restapi.get('/getExperiments', function (req, res) {
+restapi.get('/getExperiments', function (req, res, next) {
     // var query = "select distinct * from experiment";
     var query = queries.experiments;
     var data = [];
@@ -32,10 +37,11 @@ restapi.get('/getExperiments', function (req, res) {
         }
         res.json({"response": data})
     });
+    next();
 });
 
 
-restapi.get('/getConnections', function (req, res) {
+restapi.get('/getConnections', function (req, res, next) {
     if (!req.query.ex || !req.query.s) {
         res.json({"error": "Missing arguments"});
         return;
@@ -56,10 +62,11 @@ restapi.get('/getConnections', function (req, res) {
         }
         res.json({"response": data})
     });
+    next();
 });
 
 
-restapi.get('/getNodes', function (req, res) {
+restapi.get('/getNodes', function (req, res, next) {
     if (!req.query.ex) {
         res.json({"error": "Missing arguments"});
         return;
@@ -88,10 +95,11 @@ restapi.get('/getNodes', function (req, res) {
         }
         res.json({"response": data})
     });
+    next();
 });
 
 
-restapi.get('/getTopics', function (req, res) {
+restapi.get('/getTopics', function (req, res, next) {
     if (!req.query.ex) {
         res.json({"error": "Missing arguments"});
         return;
@@ -138,10 +146,11 @@ restapi.get('/getTopics', function (req, res) {
         }
         res.json({"response": data})
     });
+    next();
 });
 
 
-restapi.get('/getCloud', function (req, res) {
+restapi.get('/getCloud', function (req, res, next) {
     if (!req.query.ex) {
         res.json({"error": "Missing arguments"});
         return;
@@ -189,10 +198,11 @@ restapi.get('/getCloud', function (req, res) {
         }
         res.json({"response": data})
     });
+    next();
 });
 
 
-restapi.get('/getTrends', function (req, res) {
+restapi.get('/getTrends', function (req, res, next) {
     if (!req.query.ex || !req.query.set) {
         res.json({"error": "Missing arguments"});
         return;
@@ -252,10 +262,11 @@ restapi.get('/getTrends', function (req, res) {
         }
         res.json({"response": data})
     });
+    next();
 });
 
 
-restapi.get('/getSpider', function (req, res) {
+restapi.get('/getSpider', function (req, res, next) {
     if (!req.query.ex || !req.query.set) {
         res.json({"error": "Missing arguments"});
         return;
@@ -362,6 +373,7 @@ restapi.get('/getSpider', function (req, res) {
             res.json({"response": data})
         });
     }
+    next();
 });
 
 // Submit GET or POST to http://localhost:3001/{webServiceName}

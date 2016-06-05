@@ -371,17 +371,17 @@ restapi.get('/getSpider', function (req, res) {
 
 
 restapi.get('/getEntitiesList', function (req, res) {
-    if (!req.query.ex) {
-        res.json({"error": "Missing arguments"});
-        return;
-    }
+    // if (!req.query.ex) {
+    //     res.json({"error": "Missing arguments"});
+    //     return;
+    // }
 
     var data = [];
-    var param1 = req.query.ex;
+    // var param1 = req.query.ex;
     var query = queries.entitiesList;
 
     console.log("query: "+query);
-    var rowset = db.all(query, [param1], function (err, row) {
+    var rowset = db.all(query, function (err, row) {
         for (var i = 0; i < row.length; i++) {
             data.push({
                 "id": row[i].id,

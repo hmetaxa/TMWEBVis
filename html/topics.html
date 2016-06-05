@@ -502,16 +502,20 @@
         $('#to>input').remove();
         console.log(set);
         if (set == "topics"){
+            $(".form-control").removeClass("darkClass");
             ajaxCall(5, urlTo + experiment);
 //            ajaxCall(5, urlTo + experiment);
         }
         else if (set == "authors"){
+            $(".form-control").removeClass("darkClass");
             ajaxCall(2, urlEn + experiment);
         }
         else if (set == "journal"){
+            $(".form-control").removeClass("darkClass");
             ajaxCall(4, urlJo + experiment);
         }
         else if (set == "conference"){
+            $(".form-control").removeClass("darkClass");
             ajaxCall(3, urlCo + experiment);
         }
         else if (set == "corpus"){

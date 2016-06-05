@@ -402,9 +402,9 @@ restapi.get('/getEntitiesList', function (req, res) {
     var data = [];
     var param1 = req.query.ex;
     var query = queries.entitiesList;
-
+    
     console.log("query: "+query);
-    var rowset = db.all(query, function (err, row) {
+    var rowset = db.all(query, [param1], function (err, row) {
         for (var i = 0; i < row.length; i++) {
             data.push(row[i]);
         }
@@ -425,7 +425,12 @@ restapi.get('/getConferencesList', function (req, res) {
     console.log("query: "+query);
     var rowset = db.all(query, [param1], function (err, row) {
         for (var i = 0; i < row.length; i++) {
-            data.push(row[i]);
+            // data.push(row[i]);
+            data.push({
+                "id": row[i].id,
+                "name": row[i].name + " " + row[i].description,
+                "description": row[i].description
+            });
         }
         res.json({"response": data})
     });

@@ -39,15 +39,15 @@
 <body>
 <div class="col-md-2" id="topics"></div>
 <div class="col-md-7" id="layout"></div>
-<script type="text/javascript" src="../../../js/d3.js"></script>
-<script type="text/javascript" src="../../../js/jquery.js"></script>
-<script type="text/javascript" src="../../../js/bootstrap.js"></script>
-<script type="text/javascript" src="../../../js/jp.js"></script>
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/bootstrap.js"></script>
+<script type="text/javascript" src="../js/jp.js"></script>
 
 <script>
     var layoutId, layoutType, experiment,
             topics, topicsNoSort, topicsSort, topicsFile,
-            trends, trendsFile, layoutSet,
+            trends, trendsFile, layoutSet, layoutSimilarity,
             response;
 
 
@@ -129,13 +129,12 @@
 
     loadFromUrlParametersAndServer();
 
-    ajaxCall(experiment);
-    createTrends();
-
+    ajaxCall();
 
     function createTrends() {
         //      d3.csv("data/comminicationACM_pivot_1990-2011.csv", function (error, data) {
-        d3.json(response, function (error, json) {
+        response.forEach(function (json,i) {
+            console.log(json)
 
             var topicsjson = json[0];
 
@@ -562,7 +561,6 @@
     }
 
     function loadFromUrlParametersAndServer() {
-//                $set_elems = array("00010782","01635948","00045411","01635808","03621340","00978930");
 
         if ((experiment = getUrlParameter('ex')) == null) {
             experiment = 'ACM_400T_1000IT_6000CHRs_150_40PRN100B_4M_4TH_cosNoPPR';
@@ -579,6 +577,10 @@
         if ((layoutSet = getUrlParameter('set')) == null) {
             layoutSet = 'journal';
         }
+
+        if ((layoutSimilarity = getUrlParameter('s')) == null) {
+            layoutSimilarity = '0.9';
+        }
     }
 
     function getUrlParameter(name) {
@@ -586,20 +588,21 @@
     }
 
 
-    function ajaxCall(experiment) {
-        console.log("ajaxCall for trend layout: " + experiment);
-        var url = "http://localhost:3001/getSpider";
+    function ajaxCall() {
 
+        console.log("ajaxCall for trend layout: " + experiment);
+        var url = "http://prozac.madgik.di.uoa.gr:3001/getTrends";
         return $.ajax({
             type: "GET",
             async: true,
             url: url,
-            data: "ex=" + experiment + "&id=" + layoutId + "&set=" + layoutSet,
+            data: "ex=" + experiment + "&id=" + layoutId + "&set=" + layoutSet + "&s=" + layoutSimilarity,
             success: function (resp) {
-                response = JSON.parse(resp).response;
+                response = resp.response;
                 createTrends();
             },
             error: function (e) {
+                console.log("efdtasaaaaa")
                 alert('Error: ' + JSON.stringify(e));
             }
         });

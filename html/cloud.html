@@ -57,10 +57,12 @@
             height = $(window).height() - margin.top - margin.bottom;
 
     var x = d3.scale.ordinal()
-            .rangeRoundBands([0, width], .1);
+            .rangeRoundBands([0, 0], .1);
+//            .rangeRoundBands([0, width], .1);
 
     var y = d3.scale.linear()
-            .rangeRound([height, 0]);
+            .rangeRound([0, 0]);
+//            .rangeRound([height, 0]);
 
     var xAxis = d3.svg.axis()
             .scale(x)
@@ -92,8 +94,6 @@
     var color = d3.scale.ordinal().range(clr);
 
     var svg = d3.select("#layout").append("svg")
-//            .attr("width", width + margin.left + margin.right + 400) // gia na xwrane ta topic word bags
-//            .attr("height", height + margin.top + margin.bottom + 400) // gia na xwrane ta top 50 topic words
             .attr("width", width + margin.left + margin.right + 400) // gia na xwrane ta topic word bags
             .attr("height", height + margin.top + margin.bottom + 400) // gia na xwrane ta top 50 topic words
             .append("g")
@@ -113,13 +113,10 @@
                 arrayCounts.push(data.counts)
                 arrayWords.push(data.words)
             }
-            console.log(data)
         })
-        console.log(arrayCounts)
-        console.log(arrayWords)
         var fill = d3.scale.category20();
 
-        d3.layout.cloud().size([1000, 1000])
+        d3.layout.cloud().size([400, 300])
                 .words(
                         arrayWords.map(function (d, i) {
                             return {text: d, size: arrayCounts[i]};
@@ -130,15 +127,8 @@
 //                    }))
 
 //                    .words(
-////                            response.forEach(function (d, i) {
-////                                console.log(d)
-////                                if (d !== undefined)
-////                                    return {text: d.words, size: d.counts};
-////                            }
-//
 //                            response.map(function(d,i) {
 //                                if (i < 20){
-//console.log(d)
 //                            return {text: d.words, size: d.counts};
 //                                }
 //                        }))
@@ -155,8 +145,8 @@
         function draw(words) {
             d3.select("body")
                     .append("svg")
-                    .attr("width", 1500)
-                    .attr("height", 1500)
+                    .attr("width", 15500)
+                    .attr("height", 15500)
                     .append("g")
                     .attr("transform", "translate(150,150)")
                     .selectAll("text")
@@ -177,8 +167,6 @@
                         return d.text;
                     });
         }
-
-//        });
     }
 
 
@@ -189,7 +177,6 @@
 
 
     function loadFromUrlParametersAndServer() {
-//                $set_elems = array("00010782","01635948","00045411","01635808","03621340","00978930");
 
         if ((experiment = getUrlParameter('ex')) == null) {
             experiment = 'ACM_400T_1000IT_6000CHRs_150_40PRN100B_4M_4TH_cosNoPPR';

@@ -377,7 +377,7 @@
         $("#setDiv").show();
         $("#spinnerDiv").show();
 
-        ajaxCall(5, urlTo + experiment);
+        ajaxCall(2, urlEn + experiment);
 
         $("#similarityDiv").hide();
         $("#set1").on("click", function () {
@@ -387,7 +387,6 @@
             $("#set4").removeClass("selectSet");
             $("#set5").removeClass("selectSet");
             $("#similarityDiv").hide();
-            $("#spinnerDiv").show();
         });
         $("#set2").on("click", function () {
             $("#set1").removeClass("selectSet");
@@ -396,7 +395,6 @@
             $("#set4").removeClass("selectSet");
             $("#set5").removeClass("selectSet");
             $("#similarityDiv").show();
-            $("#spinnerDiv").show();
         });
 
         $("#trendDiv").hide();
@@ -511,31 +509,40 @@
     });
 
     $("#setDiv>select").on("change", function (s) {
-        $("#spinnerDiv").show();
         var set = $("#setDiv>select>option:selected").val();
-        $('#undo_redo').empty();
-        $('#from>input').remove();
-        $('#undo_redo_to').empty();
-        $('#to>input').remove();
         console.log(set);
         if (set == "topics"){
             $(".form-control").removeClass("darkClass");
-            ajaxCall(5, urlTo + experiment);
+//            ajaxCall(5, urlTo + experiment);
 //            ajaxCall(5, urlTo + experiment);
         }
         else if (set == "authors"){
             $(".form-control").removeClass("darkClass");
-            ajaxCall(2, urlEn + experiment);
+//            ajaxCall(2, urlEn + experiment);
         }
         else if (set == "journal"){
+            $("#spinnerDiv").show();
+            $('#undo_redo').empty();
+            $('#from>input').remove();
+            $('#undo_redo_to').empty();
+            $('#to>input').remove();
             $(".form-control").removeClass("darkClass");
             ajaxCall(4, urlJo + experiment);
         }
         else if (set == "conference"){
+            $("#spinnerDiv").show();
+            $('#undo_redo').empty();
+            $('#from>input').remove();
+            $('#undo_redo_to').empty();
+            $('#to>input').remove();
             $(".form-control").removeClass("darkClass");
             ajaxCall(3, urlCo + experiment);
         }
         else if (set == "corpus"){
+            $('#undo_redo').empty();
+            $('#from>input').remove();
+            $('#undo_redo_to').empty();
+            $('#to>input').remove();
             $("#spinnerDiv").hide();
             $(".form-control").addClass("darkClass");
         }
@@ -558,7 +565,6 @@
         else {
             url = "#";
         }
-//        ajaxCall(2, url);
         url += "&id=";
         var selected = $('#undo_redo_to').multiselect("leftAll").children();
         selected.each(function (i, d) {

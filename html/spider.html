@@ -76,24 +76,24 @@
     function MainCtrl($http) {
         var ctrl = this;
 
-        var layoutId, layoutType, experiment, layoutSet, response;
+        var layoutId, layoutType, experiment, layoutSet, layoutSimilarity, response;
 
         loadFromUrlParametersAndServer();
 
-        ajaxCall(experiment);
+        ajaxCall();
 
-        createSpider();
-
-        function ajaxCall(experiment) {
+        function ajaxCall() {
             console.log("ajaxCall for spider layout: " + experiment);
-            var url = "http://localhost:3001/getSpider";
-
+            var url = "http://prozac.madgik.di.uoa.gr:3001/getSpider?ex=" + experiment + "&id=" + layoutId + "&set=" + layoutSet +"&s=" + layoutSimilarity;
+console.log(url)
 //              $http.get('/someUrl', config).then(successCallback, errorCallback);
             $http({
                 method: 'GET',
-                url: url + "?ex=" + experiment + "&id=" + layoutId + "&set" + layoutSet
+                url: url
             }).then(function successCallback(resp) {
                 response = resp.response;
+console.log(resp)
+//                createSpider();
                 // this callback will be called asynchronously
                 // when the response is available
             });
@@ -118,8 +118,14 @@
             if ((layoutId = getUrlParameter('id')) == null) {         //default
                 layoutId = '81100002314';
             }
+            if (layoutId == 'all') {         //default
+                layoutId = '81100002314';
+            }
             if ((layoutSet = getUrlParameter('set')) == null) {         //default
                 layoutSet = 'topics';
+            }
+            if ((layoutSimilarity = getUrlParameter('s')) == null) {         //default
+                layoutSimilarity = 0.9;
             }
         }
 
@@ -133,8 +139,13 @@
             // initialize controller variables
 
             $http.get(response).success(function (data) {
+                console.log(data)
                 ctrl.csv = data;
             }).error(function (data, status, headers, config) {
+                console.log(data)
+                console.log(status)
+                console.log(headers)
+                console.log(config)
                 console.log(".")
             });
             ctrl.config = {

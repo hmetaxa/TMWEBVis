@@ -369,5 +369,89 @@ restapi.get('/getSpider', function (req, res) {
     }
 });
 
+
+restapi.get('/getEntitiesList', function (req, res) {
+    if (!req.query.ex) {
+        res.json({"error": "Missing arguments"});
+        return;
+    }
+
+    var data = [];
+    var param1 = req.query.ex;
+    var query = queries.entitiesList;
+
+    console.log("query: "+query);
+    var rowset = db.all(query, [param1], function (err, row) {
+        for (var i = 0; i < row.length; i++) {
+            data.push({
+                "id": row[i].id,
+                "name": row[i].name + " " + row[i].middleName + " " + row[i].lastName + " (" +row[i].affiliation + ")",
+                "description": row[i].name + " " + row[i].middleName + " " + row[i].lastName + " (" +row[i].affiliation + ")"
+            });
+        }
+        res.json({"response": data})
+    });
+});
+
+
+restapi.get('/getConferencesList', function (req, res) {
+    if (!req.query.ex) {
+        res.json({"error": "Missing arguments"});
+        return;
+    }
+
+    var data = [];
+    var param1 = req.query.ex;
+    var query = queries.conferencesList;
+
+    console.log("query: "+query);
+    var rowset = db.all(query, [param1], function (err, row) {
+        for (var i = 0; i < row.length; i++) {
+            data.push(row[i]);
+        }
+        res.json({"response": data})
+    });
+});
+
+
+restapi.get('/getJournalsList', function (req, res) {
+    if (!req.query.ex) {
+        res.json({"error": "Missing arguments"});
+        return;
+    }
+
+    var data = [];
+    var param1 = req.query.ex;
+    var query = queries.journalsList;
+
+    console.log("query: "+query);
+    var rowset = db.all(query, [param1], function (err, row) {
+        for (var i = 0; i < row.length; i++) {
+            data.push(row[i]);
+        }
+        res.json({"response": data})
+    });
+});
+
+
+restapi.get('/getTopicsList', function (req, res) {
+    if (!req.query.ex) {
+        res.json({"error": "Missing arguments"});
+        return;
+    }
+
+    var data = [];
+    var param1 = req.query.ex;
+    var query = queries.topicsList;
+
+    console.log("query: "+query);
+    var rowset = db.all(query, [param1], function (err, row) {
+        for (var i = 0; i < row.length; i++) {
+            data.push(row[i]);
+        }
+        res.json({"response": data})
+    });
+});
+
 // Submit GET or POST to http://localhost:3001/{webServiceName}
 restapi.listen(3001);

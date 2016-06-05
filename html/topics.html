@@ -161,8 +161,6 @@
 <div id="experimentDiv">
     Select experiment: <br/>
     <select>
-        <option>ACM_400T_1000IT_6000CHRs_150_40PRN100B_4M_4TH_cosNoPPR</option>
-        <option>ACM_400T_950IT_6000CHRs_150_40PRN100B_4M_4TH_cosWVNoPPR</option>
     </select>
 </div>
 
@@ -282,17 +280,6 @@
     <select name="from[]" id="undo_redo" class="form-control darkClass" size="30" multiple="multiple">
         <!--<option value="1">C++</option>-->
         <!--<option value="2">C#</option>-->
-        <!--<option value="3">Haskell</option>-->
-        <!--<option value="4">Java</option>-->
-        <!--<option value="5">JavaScript</option>-->
-        <!--<option value="6">Lisp</option>-->
-        <!--<option value="7">Lua</option>-->
-        <!--<option value="8">MATLAB</option>-->
-        <!--<option value="9">NewLISP</option>-->
-        <!--<option value="10">PHP</option>-->
-        <!--<option value="11">Perl</option>-->
-        <!--<option value="12">SQL</option>-->
-        <!--<option value="13">Unix shell</option>-->
     </select>
 </div>
 
@@ -326,16 +313,17 @@
 
 <script>
     var experiment;
-    var topics;
-    var listOfTopicIds = [];
+    var topics,entities,conferences,journals;
     var listOfTopics = {};
-    listOfTopicIds.push("123");
-    listOfTopicIds.push("234");
 
     loadFromUrlParametersAndServer();
 
-    var url = "http://prozac.madgik.di.uoa.gr:3001/getExperiments";
-    ajaxCall(url);
+    var urlEx = "http://prozac.madgik.di.uoa.gr:3001/getExperiments";
+    var urlEn = "http://prozac.madgik.di.uoa.gr:3001/getEntitiesList?ex=";
+    var urlCo = "http://prozac.madgik.di.uoa.gr:3001/getConferencesList?ex=";
+    var urlJo = "http://prozac.madgik.di.uoa.gr:3001/getJournalsList?ex=";
+    var urlTo = "http://prozac.madgik.di.uoa.gr:3001/getTopicsList?ex=";
+    ajaxCall(1, urlEx);
 
     $("#m1").on("click", function (d) {
         $("#m1").parent().children().removeClass("active");
@@ -384,6 +372,8 @@
 
         $("#trendDiv").hide();
         $(".form-control").removeClass("darkClass");
+
+        url = "http://prozac.madgik.di.uoa.gr:3001/getExperiments";
     });
     $("#m4").on("click", function (d) {
         $("#m4").parent().children().removeClass("active");
@@ -472,7 +462,7 @@
             url = "#";
             console.log(url)
         }
-//        ajaxCall(url);
+//        ajaxCall(2, url);
 //        var selected = $('#undo_redo_to').multiselect("leftAll").children();
 //        selected.each(function (i, d) {
 //            url += d.id + ","
@@ -483,10 +473,10 @@
     });
 
     function fillForm() {
-        d3.json(response, function (error, data) {
-            console.log("data=")
-            console.log(data)
+//        d3.json(response, function (error, data) {
+        response.forEach(function (data) {
             $.each(data, function (i, d) {
+                console.log(d)
                 listOfTopics[i] = {
                     id: d.TopicId,
                     title: d.Title
@@ -500,7 +490,7 @@
         $("#go").on("click", function () {
             url = "http://prozac.madgik.di.uoa.gr:3001/getExperiments";
             console.log($(".active").attr("id"))
-//            ajaxCall(url);
+//            ajaxCall(2, url);
             var selected = $('#undo_redo_to').multiselect("leftAll").children();
             selected.each(function (i, d) {
                 url += d.id + ","
@@ -516,6 +506,35 @@
                 left: '<input type="text" name="q" class="form-control" placeholder="Search..."/>',
                 right: '<input type="text" name="q" class="form-control" placeholder="Search..."/>'
             }
+        });
+    }
+
+    function fillExperiment(response) {
+        response.forEach(function (data,i) {
+            console.log (data)
+            $("#experimentDiv>select").append($("<option></option>").attr("id", "exp"+i).attr("value", data.id).attr("data-title",data.desc).attr("data-content",i).text(data.id));
+            $("#experimentDiv>select").on('mouseover', function(e) {
+                var $e = $(e.target);
+                if ($e.is('option')) {
+                    console.log($e.attr("data-content"))
+//                    $('#experimentDiv>select').popover('destroy');
+//                    $('#experimentDiv>select').popover('hide');
+//                    $("#experimentDiv>select")
+                            $e.popover({
+                        trigger: 'hover focus',
+                        placement: 'right',
+                        title: $e.attr("data-title"),
+                        content: $e.attr("data-content")
+                    }).popover('show');
+                }
+            });
+//            $("#experimentDiv>select").on('mouseout', function(e) {
+//                $('#experimentDiv>select').popover('hide');
+//            });
+            ajaxCall(2, urlEn+data.id);
+            ajaxCall(3, urlCo+data.id);
+            ajaxCall(4, urlJo+data.id);
+            ajaxCall(5, urlTo+data.id);
         });
     }
 
@@ -541,22 +560,87 @@
     }
 
 
-    function ajaxCall(url) {
-        console.log("ajaxCall for layout: " + experiment);
+    function ajaxCall(id, url) {
+        if (id == 1){
+            console.log("ajaxCall for layout: " + experiment);
 
-        return $.ajax({
-            type: "GET",
-            async: true,
-            url: url,
-            success: function (resp) {
-                console.log(resp);
-                response = JSON.parse(resp).response;
-                fillForm();
-            },
-            error: function (e) {
-                console.log('Error: ' + JSON.stringify(e));
-            }
-        });
+            return $.ajax({
+                type: "GET",
+                async: true,
+                url: url,
+                success: function (resp) {
+                    fillExperiment(resp.response);
+                },
+                error: function (e) {
+                    console.log('Error: ' + JSON.stringify(e));
+                }
+            });
+        }
+        else if (id == 2){
+            console.log("ajaxCall for layout: " + experiment);
+
+            return $.ajax({
+                type: "GET",
+                async: true,
+                url: url,
+                success: function (resp) {
+                    console.log("success"+url)
+//                    entities = resp.response;
+//                    fillForm();
+                },
+                error: function (e) {
+                    console.log('Error: ' + JSON.stringify(e));
+                }
+            });
+        }
+        else if (id == 3){
+            console.log("ajaxCall for layout: " + experiment);
+
+            return $.ajax({
+                type: "GET",
+                async: true,
+                url: url,
+                success: function (resp) {
+                    conferences = resp.response;
+                    fillForm();
+                },
+                error: function (e) {
+                    console.log('Error: ' + JSON.stringify(e));
+                }
+            });
+        }
+        else if (id == 4){
+            console.log("ajaxCall for layout: " + experiment);
+
+            return $.ajax({
+                type: "GET",
+                async: true,
+                url: url,
+                success: function (resp) {
+                    journals = resp.response;
+                    fillForm();
+                },
+                error: function (e) {
+                    console.log('Error: ' + JSON.stringify(e));
+                }
+            });
+        }
+        else if (id == 5){
+            console.log("ajaxCall for layout: " + experiment);
+
+            return $.ajax({
+                type: "GET",
+                async: true,
+                url: url,
+                success: function (resp) {
+                    topics = resp.response;
+                    fillForm();
+                },
+                error: function (e) {
+                    console.log('Error: ' + JSON.stringify(e));
+                }
+            });
+        }
     }
 
     function UrlExists(url) {

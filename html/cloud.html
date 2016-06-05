@@ -8,6 +8,7 @@
             font: 9px sans-serif;
             color: #121401;
         }
+
         .axis path,
         .axis line {
             fill: none;
@@ -15,18 +16,22 @@
             stroke-width: 2px;
             shape-rendering: crispEdges;
         }
+
         .point {
             stroke: grey;
             stroke-width: 3px;
             opacity: 0;
         }
-        .point:hover{
+
+        .point:hover {
             opacity: .5;
         }
-        .active_trend{
+
+        .active_trend {
             opacity: 1;
         }
-        .inactive_trend{
+
+        .inactive_trend {
             opacity: .1;
         }
     </style>
@@ -42,40 +47,39 @@
 
 <script>
     var layoutId, experiment = "ACM_400T_1000IT_6000CHRs_150_40PRN100B_4M_4TH_cosNoPPR",
-        jsonTopicsLayout, response;
+            jsonTopicsLayout, response;
 
-    var columns =[]; ///todo maybe not needed
-
+    var columns = []; ///todo maybe not needed
 
 
     var margin = {top: 20, right: 55, bottom: 30, left: 40},
-        width  = $(window).width()*2/3 - margin.left - margin.right,
-        height = $(window).height()  - margin.top  - margin.bottom;
+            width = $(window).width() * 2 / 3 - margin.left - margin.right,
+            height = $(window).height() - margin.top - margin.bottom;
 
     var x = d3.scale.ordinal()
-        .rangeRoundBands([0, width], .1);
+            .rangeRoundBands([0, width], .1);
 
     var y = d3.scale.linear()
-        .rangeRound([height, 0]);
+            .rangeRound([height, 0]);
 
     var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom");
+            .scale(x)
+            .orient("bottom");
 
     var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left");
+            .scale(y)
+            .orient("left");
 
     var clr20 = d3.scale.category20().range(),
-        clrEven = [],
-        clrOdd = [];
+            clrEven = [],
+            clrOdd = [];
 
-    for (var i=0 ; i < clr20.length ; i++)
+    for (var i = 0; i < clr20.length; i++)
         if (i % 2) clrEven.push(clr20[i]);
         else clrOdd.push(clr20[i]);
 
-    var clr= [];
-    for (var i=0 ; i < clrEven.length ; i++){
+    var clr = [];
+    for (var i = 0; i < clrEven.length; i++) {
         clr.push(clrEven[i]);
         clr.push(clrOdd[i])
     }
@@ -88,68 +92,93 @@
     var color = d3.scale.ordinal().range(clr);
 
     var svg = d3.select("#layout").append("svg")
-        .attr("width",  width  + margin.left + margin.right + 400) // gia na xwrane ta topic word bags
-        .attr("height", height + margin.top  + margin.bottom + 400) // gia na xwrane ta top 50 topic words
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+//            .attr("width", width + margin.left + margin.right + 400) // gia na xwrane ta topic word bags
+//            .attr("height", height + margin.top + margin.bottom + 400) // gia na xwrane ta top 50 topic words
+            .attr("width", width + margin.left + margin.right + 400) // gia na xwrane ta topic word bags
+            .attr("height", height + margin.top + margin.bottom + 400) // gia na xwrane ta top 50 topic words
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     var mousex;
 
     loadFromUrlParametersAndServer();
-
     ajaxCall();
 
-    function createCloud(){
+    function createCloud() {
 
-        console.log("ajaxCall for topics layout: " + experiment);
-        var url = "http://localhost:3001/getCloud";
+        var arrayWords = [];
+        var arrayCounts = [];
+        response.forEach(function (data, i) {
+            if (i < 40) {
+                arrayCounts.push(data.counts)
+                arrayWords.push(data.words)
+            }
+            console.log(data)
+        })
+        console.log(arrayCounts)
+        console.log(arrayWords)
+        var fill = d3.scale.category20();
 
-        d3.json(response, function(error,data) {
-
-            console.log("error")
-            console.log(error)
-            console.log("data")
-            console.log(data[0])
-
-            var fill = d3.scale.category20();
-
-            d3.layout.cloud().size([300, 300])
-                    .words([
-                        ".NET", "Silverlight", "jQuery", "CSS3", "HTML5", "JavaScript", "SQL","C#"].map(function(d) {
-                        return {text: d, size: 10 + Math.random() * 50};
-                    }))
+        d3.layout.cloud().size([1000, 1000])
+                .words(
+                        arrayWords.map(function (d, i) {
+                            return {text: d, size: arrayCounts[i]};
+                        }))
+//                    .words([
+//                        ".NET", "Silverlight", "jQuery", "CSS3", "HTML5", "JavaScript", "SQL","C#"].map(function(d) {
+//                        return {text: d, size: 10 + Math.random() * 50};
+//                    }))
 
 //                    .words(
-//                            data[0].map(function(d,i) {
+////                            response.forEach(function (d, i) {
+////                                console.log(d)
+////                                if (d !== undefined)
+////                                    return {text: d.words, size: d.counts};
+////                            }
+//
+//                            response.map(function(d,i) {
 //                                if (i < 20){
+//console.log(d)
 //                            return {text: d.words, size: d.counts};
 //                                }
 //                        }))
-                    .rotate(function() { return ~~(Math.random() * 2) * 90; })
-                    .font("Impact")
-                    .fontSize(function(d) { return d.size; })
-                    .on("end", draw)
-                    .start();
+                .rotate(function () {
+                    return ~~(Math.random() * 2) * 90;
+                })
+                .font("Impact")
+                .fontSize(function (d) {
+                    return d.size;
+                })
+                .on("end", draw)
+                .start();
 
-            function draw(words) {
-                d3.select("body").append("svg")
-                        .attr("width", 300)
-                        .attr("height", 300)
-                        .append("g")
-                        .attr("transform", "translate(150,150)")
-                        .selectAll("text")
-                        .data(words)
-                        .enter().append("text")
-                        .style("font-size", function(d) { return d.size + "px"; })
-                        .style("font-family", "Impact")
-                        .style("fill", function(d, i) { return fill(i); })
-                        .attr("text-anchor", "middle")
-                        .attr("transform", function(d) {
-                            return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-                        })
-                        .text(function(d) { return d.text; });
-            }
-        });
+        function draw(words) {
+            d3.select("body")
+                    .append("svg")
+                    .attr("width", 1500)
+                    .attr("height", 1500)
+                    .append("g")
+                    .attr("transform", "translate(150,150)")
+                    .selectAll("text")
+                    .data(words)
+                    .enter().append("text")
+                    .style("font-size", function (d) {
+                        return d.size + "px";
+                    })
+                    .style("font-family", "Impact")
+                    .style("fill", function (d, i) {
+                        return fill(i);
+                    })
+                    .attr("text-anchor", "middle")
+                    .attr("transform", function (d) {
+                        return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                    })
+                    .text(function (d) {
+                        return d.text;
+                    });
+        }
+
+//        });
     }
 
 
@@ -159,42 +188,39 @@
     }
 
 
-    function loadFromUrlParametersAndServer(){
+    function loadFromUrlParametersAndServer() {
 //                $set_elems = array("00010782","01635948","00045411","01635808","03621340","00978930");
 
-        if((experiment = getUrlParameter('ex')) == null){
+        if ((experiment = getUrlParameter('ex')) == null) {
             experiment = 'ACM_400T_1000IT_6000CHRs_150_40PRN100B_4M_4TH_cosNoPPR';
         }
 
-        if((layoutId = getUrlParameter('id')) == null){         //default
+        if ((layoutId = getUrlParameter('id')) == null) {         //default
             layoutId = '32';
         }
 
     }
 
     function getUrlParameter(name) {
-        return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
+        return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null
     }
 
 
     function ajaxCall() {
         console.log("ajaxCall for cloud layout: " + experiment);
-        var url = "http://localhost:3001/getCloud";
-
-
-        //todo na ta metaferw server side http://stackoverflow.com/questions/10649419/pivot-tables-php-mysql
+        var url = "http://prozac.madgik.di.uoa.gr:3001/getCloud";
         return $.ajax({
             type: "GET",
             async: true,
             url: url,
             data: "ex=" + experiment + "&id=" + layoutId,
-            dataType: 'jsonp', // Notice! JSONP <-- P (lowercase)
+//            dataType: 'jsonp', // Notice! JSONP <-- P (lowercase)
             success: function (resp) {
-                response = JSON.parse(resp).response;
+                response = resp.response;
                 createCloud();
             },
             error: function (e) {
-                console.log(e)
+                console.log(e);
                 alert('Error: ' + JSON.stringify(e));
             }
         });

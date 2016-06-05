@@ -544,16 +544,16 @@
 
     $("#go").on("click", function () {
 
-        url = "http://prozac.madgik.di.uoa.gr:3001/";
+        url = "./";
 
         if ($(".active").attr("id") == "m3") {
-            url += "getSpider?ex=" + $("#experimentDiv>select>option:selected").val() + "&set=" + $("#setDiv>select>option:selected").val() + "&s=" + $("#similarityDiv>select>option:selected").val();
+            url += "spider.html?ex=" + $("#experimentDiv>select>option:selected").val() + "&set=" + $("#setDiv>select>option:selected").val() + "&s=" + $("#similarityDiv>select>option:selected").val();
         }
         else if ($(".active").attr("id") == "m4") {
-            url += "getTrends?ex=" + $("#experimentDiv>select>option:selected").val() + "&set=" + $("#setDiv>select>option:selected").val() + "&type=" + $("#trendDiv>select>option:selected").val();
+            url += "trends.html?ex=" + $("#experimentDiv>select>option:selected").val() + "&set=" + $("#setDiv>select>option:selected").val() + "&type=" + $("#trendDiv>select>option:selected").val();
         }
         else if ($(".active").attr("id") == "m5") {
-            url += "getCloud?ex=" + $("#experimentDiv>select>option:selected").val();
+            url += "cloud.html?ex=" + $("#experimentDiv>select>option:selected").val();
         }
         else {
             url = "#";

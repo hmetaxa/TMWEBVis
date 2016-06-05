@@ -31,8 +31,9 @@
     exports.similarauthorsPart2 = "SELECT Author2 AS center, Author1 AS spider, Similarity as weight, EntityId2 AS centerid, EntityId1 AS spiderids FROM EntitySimilarityView_authors WHERE ExperimentId = ? AND Similarity > ?";
     // -- and EntityId2='81100642315'
 // main page queries
-    //todo should be changed the below
-    exports.entitiesList = "select AuthorId as id, FirstName as name, LastName as lastName, MiddleName as middleName, Affiliation as affiliation from Author";
+    // the below shows all authors in corpus but are too many
+    // exports.entitiesList = "select AuthorId as id, FirstName as name, LastName as lastName, MiddleName as middleName, Affiliation as affiliation from Author";
+    exports.entitiesList = "Select DISTINCT id, name, description from(SELECT DISTINCT EntityId1 AS id, Author1 AS name, AC1_Category0 AS description FROM EntitySimilarityView_Authors WHERE ExperimentId = ? and Similarity>0.95 UNION SELECT EntityId2 AS id, Author2 AS name, AC2_Category0 AS description FROM EntitySimilarityView_Authors WHERE ExperimentId = ? and Similarity>0.95)";
     exports.conferencesList = "SELECT DISTINCT entityId as id, seriesTitle as name, description as description FROM EntityTopicDistribution INNER JOIN Conference on EntityId=seriesId WHERE EntityType = 'ConferenceTrend' and EntityTopicDistribution.ExperimentId = ?";
     exports.journalsList = "SELECT DISTINCT entityId as id, title as name, title as description FROM EntityTopicDistribution INNER JOIN Journal on EntityId=ISSN WHERE EntityType = 'JournalTrend' and EntityTopicDistribution.ExperimentId = ? order by EntityId desc";
     exports.topicsList = "SELECT DISTINCT tdes.TopicId AS id, tdes.title AS name, tdes.title AS description FROM topicdescription AS tdes WHERE tdes.VisibilityIndex = 2 AND tdes.ExperimentId = ?";

@@ -369,30 +369,48 @@ restapi.get('/getSpider', function (req, res) {
     }
 });
 
+//todo the below goes with the other entities query
+// restapi.get('/getEntitiesList', function (req, res) {
+//     // if (!req.query.ex) {
+//     //     res.json({"error": "Missing arguments"});
+//     //     return;
+//     // }
+//
+//     var data = [];
+//     // var param1 = req.query.ex;
+//     var query = queries.entitiesList;
+//
+//     console.log("query: "+query);
+//     var rowset = db.all(query, function (err, row) {
+//         for (var i = 0; i < row.length; i++) {
+//             data.push({
+//                 "id": row[i].id,
+//                 "name": row[i].name + " " + row[i].middleName + " " + row[i].lastName + " (" +row[i].affiliation + ")",
+//                 "description": row[i].name + " " + row[i].middleName + " " + row[i].lastName + " (" +row[i].affiliation + ")"
+//             });
+//         }
+//         res.json({"response": data})
+//     });
+// });
 
 restapi.get('/getEntitiesList', function (req, res) {
-    // if (!req.query.ex) {
-    //     res.json({"error": "Missing arguments"});
-    //     return;
-    // }
+    if (!req.query.ex) {
+        res.json({"error": "Missing arguments"});
+        return;
+    }
 
     var data = [];
-    // var param1 = req.query.ex;
+    var param1 = req.query.ex;
     var query = queries.entitiesList;
 
     console.log("query: "+query);
     var rowset = db.all(query, function (err, row) {
         for (var i = 0; i < row.length; i++) {
-            data.push({
-                "id": row[i].id,
-                "name": row[i].name + " " + row[i].middleName + " " + row[i].lastName + " (" +row[i].affiliation + ")",
-                "description": row[i].name + " " + row[i].middleName + " " + row[i].lastName + " (" +row[i].affiliation + ")"
-            });
+            data.push(row[i]);
         }
         res.json({"response": data})
     });
 });
-
 
 restapi.get('/getConferencesList', function (req, res) {
     if (!req.query.ex) {

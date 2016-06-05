@@ -313,7 +313,7 @@
 
 <script>
     var experiment;
-    var topics,entities,conferences,journals;
+    var topics, entities, conferences, journals;
     var listOfTopics = {};
 
     loadFromUrlParametersAndServer();
@@ -326,6 +326,12 @@
     ajaxCall(1, urlEx);
 
     $("#m1").on("click", function (d) {
+        listOfTopics = {};
+        $('#undo_redo').empty();
+        $('#from>input').remove();
+        $('#undo_redo_to').empty();
+        $('#to>input').remove();
+        experiment = $("#experimentDiv>select>option:selected").val();
         $("#m1").parent().children().removeClass("active");
         $("#m1").addClass("active");
 
@@ -335,6 +341,12 @@
         $(".form-control").addClass("darkClass");
     });
     $("#m2").on("click", function (d) {
+        listOfTopics = {};
+        $('#undo_redo').empty();
+        $('#from>input').remove();
+        $('#undo_redo_to').empty();
+        $('#to>input').remove();
+        experiment = $("#experimentDiv>select>option:selected").val();
         $("#m2").parent().children().removeClass("active");
         $("#m2").addClass("active");
 
@@ -344,6 +356,12 @@
         $(".form-control").addClass("darkClass");
     });
     $("#m3").on("click", function (d) {
+        listOfTopics = {};
+        $('#undo_redo').empty();
+        $('#from>input').remove();
+        $('#undo_redo_to').empty();
+        $('#to>input').remove();
+        experiment = $("#experimentDiv>select>option:selected").val();
         $("#m3").parent().children().removeClass("active");
         $("#m3").addClass("active");
 
@@ -351,6 +369,8 @@
         $("#setDiv>select").append($("<option></option>").attr("id", "set1").attr("value", "topics").text("topics"));
         $("#setDiv>select").append($("<option></option>").attr("id", "set2").attr("value", "authors").text("authors"));
         $("#setDiv").show();
+
+        ajaxCall(5, urlTo + experiment);
 
         $("#similarityDiv").hide();
         $("#set1").on("click", function () {
@@ -372,10 +392,13 @@
 
         $("#trendDiv").hide();
         $(".form-control").removeClass("darkClass");
-
-        url = "http://prozac.madgik.di.uoa.gr:3001/getExperiments";
     });
     $("#m4").on("click", function (d) {
+        listOfTopics = {};
+        $('#undo_redo').empty();
+        $('#from>input').remove();
+        $('#undo_redo_to').empty();
+        $('#to>input').remove();
         $("#m4").parent().children().removeClass("active");
         $("#m4").addClass("active");
 
@@ -384,6 +407,8 @@
         $("#setDiv>select").append($("<option></option>").attr("id", "set4").attr("value", "conference").text("conference"));
         $("#setDiv>select").append($("<option></option>").attr("id", "set5").attr("value", "corpus").text("corpus"));
         $("#setDiv").show();
+
+        ajaxCall(4, urlJo + experiment);
 
         $(".form-control").removeClass("darkClass");
         $("#set3").on("click", function () {
@@ -415,6 +440,12 @@
         $("#trendDiv").show();
     });
     $("#m5").on("click", function (d) {
+        listOfTopics = {};
+        $('#undo_redo').empty();
+        $('#from>input').remove();
+        $('#undo_redo_to').empty();
+        $('#to>input').remove();
+        experiment = $("#experimentDiv>select>option:selected").val();
         $("#m5").parent().children().removeClass("active");
         $("#m5").addClass("active");
 
@@ -422,8 +453,19 @@
         $("#trendDiv").hide();
         $("#setDiv").hide();
         $(".form-control").removeClass("darkClass");
+        $('#undo_redo').empty();
+        $('#from>input').remove();
+        $('#undo_redo_to').empty();
+        $('#to>input').remove();
+        ajaxCall(5, urlTo + experiment);
     });
     $("#m6").on("click", function (d) {
+        listOfTopics = {};
+        $('#undo_redo').empty();
+        $('#from>input').remove();
+        $('#undo_redo_to').empty();
+        $('#to>input').remove();
+        experiment = $("#experimentDiv>select>option:selected").val();
         $("#m6").parent().children().removeClass("active");
         $("#m6").addClass("active");
 
@@ -433,6 +475,12 @@
         $(".form-control").addClass("darkClass");
     });
     $("#m7").on("click", function (d) {
+        listOfTopics = {};
+        $('#undo_redo').empty();
+        $('#from>input').remove();
+        $('#undo_redo_to').empty();
+        $('#to>input').remove();
+        experiment = $("#experimentDiv>select>option:selected").val();
         $("#m7").parent().children().removeClass("active");
         $("#m7").addClass("active");
 
@@ -441,6 +489,36 @@
         $("#setDiv").hide();
         $(".form-control").addClass("darkClass");
     });
+
+    $("#experimentDiv>select").on("change", function (s) {
+        experiment = $("#experimentDiv>select>option:selected").val();
+    });
+
+    $("#setDiv>select").on("change", function (s) {
+        var set = $("#setDiv>select>option:selected").val();
+        $('#undo_redo').empty();
+        $('#from>input').remove();
+        $('#undo_redo_to').empty();
+        $('#to>input').remove();
+        console.log(set);
+        if (set == "topics"){
+            ajaxCall(5, urlTo + experiment);
+//            ajaxCall(5, urlTo + experiment);
+        }
+        else if (set == "authors"){
+            ajaxCall(2, urlEn + experiment);
+        }
+        else if (set == "journal"){
+            ajaxCall(4, urlJo + experiment);
+        }
+        else if (set == "conference"){
+            ajaxCall(3, urlCo + experiment);
+        }
+        else if (set == "corpus"){
+            $(".form-control").addClass("darkClass");
+        }
+    });
+
 
     $("#go").on("click", function () {
 
@@ -472,35 +550,20 @@
 //        window.open(url, '_blank');
     });
 
-    function fillForm() {
-//        d3.json(response, function (error, data) {
-        response.forEach(function (data) {
-            $.each(data, function (i, d) {
-                console.log(d)
-                listOfTopics[i] = {
-                    id: d.TopicId,
-                    title: d.Title
-                }; //value # of publications
+    function fillForm(response) {
+        console.log("rrr")
+        response.forEach(function (d, i) {
+            listOfTopics[i] = {
+                id: d.id,
+                title: d.name
+            }; //value # of publications
 
-                $('#undo_redo')
-                        .append("<option value=\"" + i + "\" id=\"" + d.TopicId + "\" title=\"" + d.Title + "\"> " + d.Title + "</option>");
-            });
+            $('#undo_redo')
+                    .append("<option value=\"" + i + "\" id=\"" + d.id + "\" title=\"" + d.name + "\"> " + d.name + "</option>");
         });
 
-        $("#go").on("click", function () {
-            url = "http://prozac.madgik.di.uoa.gr:3001/getExperiments";
-            console.log($(".active").attr("id"))
-//            ajaxCall(2, url);
-            var selected = $('#undo_redo_to').multiselect("leftAll").children();
-            selected.each(function (i, d) {
-                url += d.id + ","
-            });
-            console.log(url);
-//            window.location.replace(url);
-            window.open(url, '_blank');
-        });
-
-        $('#multiselect').multiselect();
+//        $('#multiselect').multiselect();
+        $('#undo_redo').multiselect("refresh");
         $('#undo_redo').multiselect({
             search: {
                 left: '<input type="text" name="q" class="form-control" placeholder="Search..."/>',
@@ -510,17 +573,16 @@
     }
 
     function fillExperiment(response) {
-        response.forEach(function (data,i) {
-            console.log (data)
-            $("#experimentDiv>select").append($("<option></option>").attr("id", "exp"+i).attr("value", data.id).attr("data-title",data.desc).attr("data-content",i).text(data.id));
-            $("#experimentDiv>select").on('mouseover', function(e) {
+        response.forEach(function (data, i) {
+            $("#experimentDiv>select").append($("<option></option>").attr("id", "exp" + i).attr("value", data.id).attr("data-title", data.desc).attr("data-content", i).text(data.id));
+            $("#experimentDiv>select").on('mouseover', function (e) {
                 var $e = $(e.target);
                 if ($e.is('option')) {
                     console.log($e.attr("data-content"))
 //                    $('#experimentDiv>select').popover('destroy');
 //                    $('#experimentDiv>select').popover('hide');
 //                    $("#experimentDiv>select")
-                            $e.popover({
+                    $e.popover({
                         trigger: 'hover focus',
                         placement: 'right',
                         title: $e.attr("data-title"),
@@ -531,10 +593,6 @@
 //            $("#experimentDiv>select").on('mouseout', function(e) {
 //                $('#experimentDiv>select').popover('hide');
 //            });
-            ajaxCall(2, urlEn+data.id);
-            ajaxCall(3, urlCo+data.id);
-            ajaxCall(4, urlJo+data.id);
-            ajaxCall(5, urlTo+data.id);
         });
     }
 
@@ -544,8 +602,6 @@
     }
 
     function loadFromUrlParametersAndServer() {
-//                $set_elems = array("00010782","01635948","00045411","01635808","03621340","00978930");
-
         if ((experiment = getUrlParameter('ex')) == null) {
             experiment = 'ACM_400T_1000IT_6000CHRs_150_40PRN100B_4M_4TH_cosNoPPR';
         }
@@ -561,7 +617,7 @@
 
 
     function ajaxCall(id, url) {
-        if (id == 1){
+        if (id == 1) {
             console.log("ajaxCall for layout: " + experiment);
 
             return $.ajax({
@@ -576,70 +632,74 @@
                 }
             });
         }
-        else if (id == 2){
-            console.log("ajaxCall for layout: " + experiment);
-
-            return $.ajax({
-                type: "GET",
-                async: true,
-                url: url,
-                success: function (resp) {
-                    console.log("success"+url)
-//                    entities = resp.response;
-//                    fillForm();
-                },
-                error: function (e) {
-                    console.log('Error: ' + JSON.stringify(e));
-                }
-            });
+        else if (id == 2) {
+//            if (!entities)
+                return $.ajax({
+                    type: "GET",
+                    async: true,
+                    url: url,
+                    success: function (resp) {
+                        console.log("success" + url)
+                        entities = resp.response;
+                        fillForm(entities);
+                    },
+                    error: function (e) {
+                        console.log('Error: ' + JSON.stringify(e));
+                    }
+                });
+//            else
+//                fillForm(entities);
         }
-        else if (id == 3){
-            console.log("ajaxCall for layout: " + experiment);
-
-            return $.ajax({
-                type: "GET",
-                async: true,
-                url: url,
-                success: function (resp) {
-                    conferences = resp.response;
-                    fillForm();
-                },
-                error: function (e) {
-                    console.log('Error: ' + JSON.stringify(e));
-                }
-            });
+        else if (id == 3) {
+//            if (!conferences)
+                return $.ajax({
+                    type: "GET",
+                    async: true,
+                    url: url,
+                    success: function (resp) {
+                        conferences = resp.response;
+                        fillForm(conferences);
+                    },
+                    error: function (e) {
+                        console.log('Error: ' + JSON.stringify(e));
+                    }
+                });
+//            else
+//                fillForm(conferences);
         }
-        else if (id == 4){
-            console.log("ajaxCall for layout: " + experiment);
-
-            return $.ajax({
-                type: "GET",
-                async: true,
-                url: url,
-                success: function (resp) {
-                    journals = resp.response;
-                    fillForm();
-                },
-                error: function (e) {
-                    console.log('Error: ' + JSON.stringify(e));
-                }
-            });
+        else if (id == 4) {
+//            if (!journals)
+                return $.ajax({
+                    type: "GET",
+                    async: true,
+                    url: url,
+                    success: function (resp) {
+                        journals = resp.response;
+                        fillForm(journals);
+                    },
+                    error: function (e) {
+                        console.log('Error: ' + JSON.stringify(e));
+                    }
+                });
+//            else
+//                fillForm(journals);
         }
-        else if (id == 5){
-            console.log("ajaxCall for layout: " + experiment);
-
-            return $.ajax({
-                type: "GET",
-                async: true,
-                url: url,
-                success: function (resp) {
-                    topics = resp.response;
-                    fillForm();
-                },
-                error: function (e) {
-                    console.log('Error: ' + JSON.stringify(e));
-                }
-            });
+        else if (id == 5) {
+//            if (!topics)
+                return $.ajax({
+                    type: "GET",
+                    async: true,
+                    url: url,
+                    success: function (resp) {
+                        topics = resp.response;
+                        fillForm(topics);
+                    },
+                    error: function (e) {
+                        console.log('Error: ' + JSON.stringify(e));
+                    }
+                });
+//            else
+//                fillForm(topics);
         }
     }
 

@@ -565,11 +565,14 @@
             url += d.id + ","
         });
         if (selected.length == 0) {
-            url += "all"
+            url += "all,"
         }
+        url = url.slice(0, -1);     // remove last ,
+
+
         console.log(url);
 ////            window.location.replace(url);
-//        window.open(url, '_blank');
+        window.open(url, '_blank');
     });
 
     function fillForm(response) {

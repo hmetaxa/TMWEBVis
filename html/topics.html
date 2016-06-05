@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <link href="../css/bootstrap.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">-->
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="../css/prettify.css"/>
@@ -182,13 +183,16 @@
         <option>1</option>
     </select>
 </div>
-<div id="trendDiv" style="display: none;">
+<div id="trendDiv" class="col-xs-3" style="display: none;">
     Select Trend visualization type: <br/>
     <select>
         <option selected>stream</option>
         <option>area</option>
         <option>line</option>
     </select>
+</div>
+<div id="spinnerDiv" style="display: none;">
+    <i class="fa fa-spinner fa-spin" style="font-size:60px;z-index: 3"></i>
 </div>
 <nav class="main-menu">
     <ul id="list">
@@ -282,7 +286,6 @@
         <!--<option value="2">C#</option>-->
     </select>
 </div>
-
 <div class="col-xs-2">
     <button type="button" id="undo_redo_undo" class="btn btn-primary btn-block">undo</button>
     <button type="button" id="undo_redo_rightAll" class="btn btn-default btn-block"><i
@@ -337,6 +340,7 @@
         $("#m1").addClass("active");
 
         $("#similarityDiv").hide();
+        $("#spinnerDiv").hide();
         $("#trendDiv").hide();
         $("#setDiv").hide();
         $(".form-control").addClass("darkClass");
@@ -352,6 +356,7 @@
         $("#m2").addClass("active");
 
         $("#similarityDiv").hide();
+        $("#spinnerDiv").hide();
         $("#trendDiv").hide();
         $("#setDiv").hide();
         $(".form-control").addClass("darkClass");
@@ -370,6 +375,7 @@
         $("#setDiv>select").append($("<option></option>").attr("id", "set1").attr("value", "topics").text("topics"));
         $("#setDiv>select").append($("<option></option>").attr("id", "set2").attr("value", "authors").text("authors"));
         $("#setDiv").show();
+        $("#spinnerDiv").show();
 
         ajaxCall(5, urlTo + experiment);
 
@@ -381,6 +387,7 @@
             $("#set4").removeClass("selectSet");
             $("#set5").removeClass("selectSet");
             $("#similarityDiv").hide();
+            $("#spinnerDiv").show();
         });
         $("#set2").on("click", function () {
             $("#set1").removeClass("selectSet");
@@ -389,6 +396,7 @@
             $("#set4").removeClass("selectSet");
             $("#set5").removeClass("selectSet");
             $("#similarityDiv").show();
+            $("#spinnerDiv").show();
         });
 
         $("#trendDiv").hide();
@@ -408,6 +416,7 @@
         $("#setDiv>select").append($("<option></option>").attr("id", "set4").attr("value", "conference").text("conference"));
         $("#setDiv>select").append($("<option></option>").attr("id", "set5").attr("value", "corpus").text("corpus"));
         $("#setDiv").show();
+        $("#spinnerDiv").show();
 
         ajaxCall(4, urlJo + experiment);
 
@@ -419,6 +428,7 @@
             $("#set4").removeClass("selectSet");
             $("#set5").removeClass("selectSet");
             $(".form-control").removeClass("darkClass");
+            $("#spinnerDiv").show();
         });
         $("#set4").on("click", function () {
             $("#set1").removeClass("selectSet");
@@ -427,6 +437,7 @@
             $("#set4").addClass("selectSet");
             $("#set5").removeClass("selectSet");
             $(".form-control").removeClass("darkClass");
+            $("#spinnerDiv").show();
         });
         $("#set5").on("click", function () {
             $("#set1").removeClass("selectSet");
@@ -435,6 +446,7 @@
             $("#set4").removeClass("selectSet");
             $("#set5").addClass("selectSet");
             $(".form-control").addClass("darkClass");
+            $("#spinnerDiv").show();
         });
 
         $("#similarityDiv").hide();
@@ -453,6 +465,7 @@
         $("#similarityDiv").hide();
         $("#trendDiv").hide();
         $("#setDiv").hide();
+        $("#spinnerDiv").show();
         $(".form-control").removeClass("darkClass");
         $('#undo_redo').empty();
         $('#from>input').remove();
@@ -474,6 +487,7 @@
         $("#trendDiv").hide();
         $("#setDiv").hide();
         $(".form-control").addClass("darkClass");
+        $("#spinnerDiv").hide();
     });
     $("#m7").on("click", function (d) {
         listOfTopics = {};
@@ -489,6 +503,7 @@
         $("#trendDiv").hide();
         $("#setDiv").hide();
         $(".form-control").addClass("darkClass");
+        $("#spinnerDiv").hide();
     });
 
     $("#experimentDiv>select").on("change", function (s) {
@@ -496,6 +511,7 @@
     });
 
     $("#setDiv>select").on("change", function (s) {
+        $("#spinnerDiv").show();
         var set = $("#setDiv>select>option:selected").val();
         $('#undo_redo').empty();
         $('#from>input').remove();
@@ -520,6 +536,7 @@
             ajaxCall(3, urlCo + experiment);
         }
         else if (set == "corpus"){
+            $("#spinnerDiv").hide();
             $(".form-control").addClass("darkClass");
         }
     });
@@ -531,32 +548,32 @@
 
         if ($(".active").attr("id") == "m3") {
             url += "getSpider?ex=" + $("#experimentDiv>select>option:selected").val() + "&set=" + $("#setDiv>select>option:selected").val() + "&s=" + $("#similarityDiv>select>option:selected").val();
-            console.log(url)
         }
         else if ($(".active").attr("id") == "m4") {
             url += "getTrends?ex=" + $("#experimentDiv>select>option:selected").val() + "&set=" + $("#setDiv>select>option:selected").val() + "&type=" + $("#trendDiv>select>option:selected").val();
-            console.log(url)
         }
         else if ($(".active").attr("id") == "m5") {
             url += "getCloud?ex=" + $("#experimentDiv>select>option:selected").val();
-            console.log(url)
         }
         else {
             url = "#";
-            console.log(url)
         }
 //        ajaxCall(2, url);
-//        var selected = $('#undo_redo_to').multiselect("leftAll").children();
-//        selected.each(function (i, d) {
-//            url += d.id + ","
-//        });
-//        console.log(url);
+        url += "&id=";
+        var selected = $('#undo_redo_to').multiselect("leftAll").children();
+        selected.each(function (i, d) {
+            url += d.id + ","
+        });
+        if (selected.length == 0) {
+            url += "all"
+        }
+        console.log(url);
 ////            window.location.replace(url);
 //        window.open(url, '_blank');
     });
 
     function fillForm(response) {
-        console.log("rrr")
+
         response.forEach(function (d, i) {
             listOfTopics[i] = {
                 id: d.id,
@@ -599,7 +616,7 @@
 //                $('#experimentDiv>select').popover('hide');
 //            });
         });
-        ajaxCall(5, urlEn + $("#experimentDiv>select>option:selected").val());
+//        ajaxCall(5, urlEn + $("#experimentDiv>select>option:selected").val());
     }
 
     /* function returns 1 if an array contains an object or 0 if not */
@@ -632,6 +649,7 @@
                 url: url,
                 success: function (resp) {
                     fillExperiment(resp.response);
+                    $("#spinnerDiv").hide();
                 },
                 error: function (e) {
                     console.log('Error: ' + JSON.stringify(e));
@@ -647,6 +665,7 @@
                     success: function (resp) {
                         entities = resp.response;
                         fillForm(entities);
+                        $("#spinnerDiv").hide();
                     },
                     error: function (e) {
                         console.log('Error: ' + JSON.stringify(e));
@@ -664,6 +683,7 @@
                     success: function (resp) {
                         conferences = resp.response;
                         fillForm(conferences);
+                        $("#spinnerDiv").hide();
                     },
                     error: function (e) {
                         console.log('Error: ' + JSON.stringify(e));
@@ -681,6 +701,7 @@
                     success: function (resp) {
                         journals = resp.response;
                         fillForm(journals);
+                        $("#spinnerDiv").hide();
                     },
                     error: function (e) {
                         console.log('Error: ' + JSON.stringify(e));
@@ -698,6 +719,7 @@
                     success: function (resp) {
                         topics = resp.response;
                         fillForm(topics);
+                        $("#spinnerDiv").hide();
                     },
                     error: function (e) {
                         console.log('Error: ' + JSON.stringify(e));

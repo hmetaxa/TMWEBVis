@@ -248,7 +248,8 @@ restapi.get('/getTrends', function (req, res) {
         query += ")";
     }
 
-    query += " ORDER BY EntityTopicDistribution.TopicId";
+    query += " ORDER BY EntityId, titles, xaxis";
+    // query += " ORDER BY EntityTopicDistribution.TopicId";
 
     console.log("query: "+query);
     var rowset = db.all(query, [param2], function (err, row) {

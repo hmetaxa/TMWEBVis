@@ -84,7 +84,7 @@
 
         function ajaxCall() {
             console.log("ajaxCall for spider layout: " + experiment);
-            var url = "http://prozac.madgik.di.uoa.gr:3001/getSpider?ex=" + experiment + "&id=" + layoutId + "&set=" + layoutSet +"&s=" + layoutSimilarity;
+            var url = "http://localhost:3001/getSpider?ex=" + experiment + "&id=" + layoutId + "&set=" + layoutSet +"&s=" + layoutSimilarity;
 console.log(url)
 //              $http.get('/someUrl', config).then(successCallback, errorCallback);
             $http({

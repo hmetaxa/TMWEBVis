@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <link href="../css/bootstrap.css" rel="stylesheet">
@@ -8,7 +9,7 @@
             font: 9px sans-serif;
             color: #121401;
         }
-
+        
         .axis path,
         .axis line {
             fill: none;
@@ -16,35 +17,36 @@
             stroke-width: 2px;
             shape-rendering: crispEdges;
         }
-
+        
         .point {
             stroke: grey;
             stroke-width: 3px;
             opacity: 0;
         }
-
+        
         .point:hover {
             opacity: .5;
         }
-
+        
         .active_trend {
             opacity: 1;
         }
-
+        
         .inactive_trend {
             opacity: .1;
         }
     </style>
 </head>
-<body>
-<div class="col-md-2" id="topics"></div>
-<div class="col-md-7" id="layout"></div>
-<script type="text/javascript" src="../js/d3.js"></script>
-<script type="text/javascript" src="../js/jquery.js"></script>
-<script type="text/javascript" src="../js/bootstrap.js"></script>
-<script type="text/javascript" src="../js/jp.js"></script>
 
-<script>
+<body>
+    <div class="col-md-2" id="topics"></div>
+    <div class="col-md-7" id="layout"></div>
+    <script type="text/javascript" src="../js/d3.js"></script>
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script type="text/javascript" src="../js/bootstrap.js"></script>
+    <script type="text/javascript" src="../js/jp.js"></script>
+
+    <script>
     var layoutId, layoutType, experiment,
             topics, topicsNoSort, topicsSort, topicsFile,
             trends, trendsFile, layoutSet, layoutSimilarity,
@@ -121,15 +123,18 @@
         var obj;
 
         response.forEach(function (d, i) {
-            topics.push({index: i, id: d.ids, title: d.titles});
-            varNames.push(d.ids);
+            if (varNames.indexOf(d.topicId)==-1)
+            {
+                topics.push({index: i, id: d.topicId, title: d.title});
+                varNames.push(d.topicId);
+            }
         });
 
-        var result = pivot(response, ['xaxis'], ['titles'], {});
+        var result = pivot(response, ['xaxis'], ['title'], {});
         for (var i = 0; i < result.columnHeaders.length; i++) {
             for (var j = 0; j < result.rowHeaders.length; j++) {
                 response.some(function (d) {
-                            if (hasValue(d, "titles", result.columnHeaders[i][0]) && hasValue(d, "xaxis", result.rowHeaders[j][0])) {
+                            if (hasValue(d, "title", result.columnHeaders[i][0]) && hasValue(d, "xaxis", result.rowHeaders[j][0])) {
                                 obj = d;
                                 return 1;
                             }
@@ -141,7 +146,7 @@
                 if (obj == 0)
                     fullresponse.push({symbol: result.columnHeaders[i][0], date: result.rowHeaders[j][0], price: 0})
                 else
-                    fullresponse.push({symbol: obj.titles, date: obj.xaxis, price: obj.weight});
+                    fullresponse.push({symbol: obj.title, date: obj.xaxis, price: obj.weight});
             }
         }
 
@@ -293,22 +298,28 @@
                     });
 
             var seriesArr = [], series = {};
+
+            
             varNames.forEach(function (name) {
                 series[name] = {name: name, values: []};
                 seriesArr.push(series[name]);
             });
 
             console.log(data)
-
+    
             data.forEach(function (d) {
-                series[d.ids].values.push({name: d.ids, label: d[labelVar], value: d.weight});
+               
+               //varNames.map(function (name) {    
+                series[d.topicId].values.push({name: d.topicId, label: d.xaxis, value: d.weight});
+                // });
             });
 
             x.domain(data.map(function (d) {
-                return d.quarter;
+                return d.xaxis;
             }));
 
-            stack(seriesArr.reverse());
+            //  stack(seriesArr.reverse());
+            stack(seriesArr);
 
             y.domain([0, d3.max(seriesArr, function (c) {
                 return d3.max(c.values, function (d) {
@@ -318,7 +329,8 @@
 
 
             var selection = svg.selectAll(".series")
-                    .data(seriesArr.reverse())
+                    //.data(seriesArr.reverse())
+                    .data(seriesArr)
                     .enter()
                     .append("g")
                     .attr("id", function (d, i) {
@@ -414,7 +426,7 @@
                     .style("text-anchor", "start")
                     .text(function (d) {
                         console.log("-- " + topic_hash.indexOf(d))
-                        return topics[topic_hash.indexOf(d)].index + ". " + topics[topic_hash.indexOf(d)].title;
+                        return topics[d].id + ". " + topics[d].title;
                     });
         }
 
@@ -542,7 +554,7 @@
         }
 
         if ((layoutId = getUrlParameter('id')) == null) {         //default
-            layoutId = '0163-5948';
+            layoutId = 'all';
         }
 
         if ((layoutType = getUrlParameter('type')) == null) {
@@ -565,8 +577,8 @@
 
     function ajaxCall() {
 
-        console.log("ajaxCall for trend layout: " + experiment);
-        var url = "http://prozac.madgik.di.uoa.gr:3001/getTrends";
+        console.log("ajaxCall for trend layout: " + experiment+"API: http://localhost:3001/getTrends"+"ex=" + experiment + "&id=" + layoutId + "&set=" + layoutSet + "&s=" + layoutSimilarity);
+        var url = "http://localhost:3001/getTrends";
         return $.ajax({
             type: "GET",
             async: true,
@@ -592,4 +604,5 @@
 
 </script>
 </body>
+
 </html>

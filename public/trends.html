@@ -10,6 +10,11 @@
             color: #121401;
         }
         
+        /*#chart {
+            font: 9px sans-serif;
+            color: #121401;
+        }*/
+
         .axis path,
         .axis line {
             fill: none;
@@ -35,12 +40,13 @@
         .inactive_trend {
             opacity: .1;
         }
+
+       
     </style>
 </head>
 
-<body>
-    <div class="col-md-2" id="topics"></div>
-    <div class="col-md-7" id="layout"></div>
+<body> 
+    <div id="chart"></div>
     <script type="text/javascript" src="../js/d3.js"></script>
     <script type="text/javascript" src="../js/jquery.js"></script>
     <script type="text/javascript" src="../js/bootstrap.js"></script>
@@ -57,8 +63,19 @@
 
 
     var margin = {top: 20, right: 55, bottom: 30, left: 40},
-            width = $(window).width() * 2 / 3 - margin.left - margin.right,
-            height = $(window).height() - margin.top - margin.bottom;
+             //m_width = $("#chart").width(),
+            // width = 938,
+             //height = 500;
+            //width  = 1000 - margin.left - margin.right,
+            //height = 500  - margin.top  - margin.bottom;
+            //width = $(window).width(),
+             //height = $(window).height();
+             width = $(window).width() - margin.left - margin.right - 300,
+             height = Math.min(2/3*$(window).width(),$(window).height())  - margin.top - margin.bottom -20;
+
+// var margin = 50,
+// 	width = parseInt(d3.select("#chart").style("width")) - margin*2,
+// 	height = parseInt(d3.select("#chart").style("height")) - margin*2;
 
     var x = d3.scale.ordinal()
             .rangeRoundBands([0, width], .1);
@@ -94,12 +111,34 @@
 
 
     var color = d3.scale.ordinal().range(clr);
+    var widthvb = width+ margin.left + margin.right + 280
+    , heightvp =  height+ margin.top + margin.bottom ;
 
-    var svg = d3.select("#layout").append("svg")
-            .attr("width", width + margin.left + margin.right + 400) // gia na xwrane ta topic word bags
-            .attr("height", height + margin.top + margin.bottom + 400) // gia na xwrane ta top 50 topic words
+
+    //var svg = d3.select("#chart")
+    var svg = d3.select("body")
+    //.append("div")   
+    .append("svg")
+    .attr("width", "100%")
+    .attr("height", "100%")
+    .attr("preserveAspectRatio", "xMidYMid")
+    //.attr("preserveAspectRatio", "xMinYMin meet")
+    .attr("viewBox", "0 0 " +  widthvb  + " " + heightvp  )
+    //.attr("width", m_width)
+    //.attr("height", m_width * height / width)
+     //       .attr("width", width+ margin.left + margin.right + 280 ) // +400 gia na xwrane ta topic word bags
+     //       .attr("height", height+ margin.top + margin.bottom   ) // +400 gia na xwrane ta top 50 topic words
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+//  var svg = d3.select("body").append("svg")
+//       .attr("width", "100%")
+//       .attr("height", "100%")
+//       .attr("viewBox", "0 0 960 500")
+//       .attr("preserveAspectRatio", "xMidyMin")
+//     .append("g")
+//       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     loadFromUrlParametersAndServer();
 
@@ -109,49 +148,52 @@
         return obj.hasOwnProperty(key) && obj[key] === value;
     }
 
+
     function createTrends() {
         //omiros test
         console.log(response)
         var topicwords;
         var title;
         var topics = [];
-        var topic_hash = [];
-        var fullresponse = []
-        var labelVar = 'quarter';
+        //var topic_hash = [];
+        //var fullresponse = []
+        //var labelVar = 'quarter';
 
         var varNames = [];
         var columns;
         var obj;
+        var i=0;
 
-        response.forEach(function (d, i) {
+        response.forEach(function (d) {
             if (varNames.indexOf(d.topicId)==-1)
             {
-                topics.push({index: i, id: d.topicId, title: d.title});
+                topics.push({index: i++, id: d.topicId, title: d.title});
                 varNames.push(d.topicId);
+                //topic_hash.push(d.title);
             }
         });
 
-        var result = pivot(response, ['xaxis'], ['title'], {});
-        for (var i = 0; i < result.columnHeaders.length; i++) {
-            for (var j = 0; j < result.rowHeaders.length; j++) {
-                response.some(function (d) {
-                            if (hasValue(d, "title", result.columnHeaders[i][0]) && hasValue(d, "xaxis", result.rowHeaders[j][0])) {
-                                obj = d;
-                                return 1;
-                            }
-                            else {
-                                obj = 0;
-                                return 0;
-                            }
-                        });
-                if (obj == 0)
-                    fullresponse.push({symbol: result.columnHeaders[i][0], date: result.rowHeaders[j][0], price: 0})
-                else
-                    fullresponse.push({symbol: obj.title, date: obj.xaxis, price: obj.weight});
-            }
-        }
+        // var result = pivot(response, ['xaxis'], ['title'], {});
+        // for (var i = 0; i < result.columnHeaders.length; i++) {
+        //     for (var j = 0; j < result.rowHeaders.length; j++) {
+        //         response.some(function (d) {
+        //                     if (hasValue(d, "title", result.columnHeaders[i][0]) && hasValue(d, "xaxis", result.rowHeaders[j][0])) {
+        //                         obj = d;
+        //                         return 1;
+        //                     }
+        //                     else {
+        //                         obj = 0;
+        //                         return 0;
+        //                     }
+        //                 });
+        //         if (obj == 0)
+        //             fullresponse.push({symbol: result.columnHeaders[i][0], date: result.rowHeaders[j][0], price: 0})
+        //         else
+        //             fullresponse.push({symbol: obj.title, date: obj.xaxis, price: obj.weight});
+        //     }
+        // }
 
-        console.log(fullresponse)
+        // console.log(fullresponse)
 
         console.log(topics)
         console.log(varNames)
@@ -183,22 +225,24 @@
                     })
                     .y(function (d) {
                         return y(d.value);
-                    });
+                    }); 
 
+            var seriesData = [], series = {};
 
-            var seriesData = varNames.map(function (name) {
-                return {
-                    name: name,
-                    values: data.map(function (d) {
-                        return {name: name, label: d[labelVar], value: +d[name]};
-                    })
-                };
+            varNames.forEach(function (name) {
+                series[name] = {name: name, values: []};
+                seriesData.push(series[name]);
             });
 
+                
+            data.forEach(function (d) {                                 
+                series[d.topicId].values.push({name: d.topicId, label: d.xaxis, value: d.weight});
+            });
 
             x.domain(data.map(function (d) {
-                return d.quarter;
+                return d.xaxis;
             }));
+
             y.domain([
                 d3.min(seriesData, function (c) {
                     return d3.min(c.values, function (d) {
@@ -212,7 +256,7 @@
                 })
             ]);
 
-            drawAxis();
+            //drawAxis();
 
             var series = svg.selectAll(".series")
                     .data(seriesData)
@@ -268,7 +312,7 @@
                     });
 
             drawAxis();
-            drawLegend(varNames, topic_hash);
+            drawLegend(varNames);
 
         }
 
@@ -300,7 +344,6 @@
 
             var seriesArr = [], series = {};
 
-            
             varNames.forEach(function (name) {
                 series[name] = {name: name, values: []};
                 seriesArr.push(series[name]);
@@ -308,11 +351,8 @@
 
             console.log(data)
     
-            data.forEach(function (d) {
-               
-               //varNames.map(function (name) {    
+            data.forEach(function (d) {                                 
                 series[d.topicId].values.push({name: d.topicId, label: d.xaxis, value: d.weight});
-                // });
             });
 
             x.domain(data.map(function (d) {
@@ -390,13 +430,13 @@
 
 
             drawAxis();
-            drawLegend(varNames, topic_hash);
+            drawLegend(varNames);
 
             $(".y").find(".tick").find("text").hide();
 
         }
 
-        function drawLegend(varNames, topic_hash) {
+        function drawLegend(varNames) {
             var legend = svg.selectAll(".legend")
                     .data(varNames)
                     .enter().append("g")
@@ -406,7 +446,7 @@
                     .style("cursor", "pointer")
                     .attr("class", "legend")
                     .attr("transform", function (d, i) {
-                        return "translate(55," + i * 20 + ")";
+                       return "translate(55," + i * 20 + ")";
                     })
                     .on("click", function (d) {
                         clickPopover.call(this, d);
@@ -424,10 +464,11 @@
                     .attr("y", 6)
                     .attr("dy", ".35em")
                     //.append("textpath") // using "end", the entire text disappears
-                    .style("text-anchor", "start")
+                    .style("text-anchor", "start") //right from the bullet
+                    //.style("text-anchor", "end") //left from the bullet
                     .text(function (d) {
-                        console.log("-- " + topic_hash.indexOf(d))
-                        return topics[d].id + ". " + topics[d].title;
+                        console.log("-- " + varNames.indexOf(d))
+                        return topics[varNames.indexOf(d)].id + ". " + topics[varNames.indexOf(d)].title;
                     });
         }
 
@@ -602,6 +643,13 @@
         http.send();
         return http.status != 404;
     }
+
+// $(window).resize(function() {
+//   //var w = $("body").width();
+//   var w = $("#chart").width();
+//   svg.attr("width", w);
+//   svg.attr("height", w * height / width);
+// });
 
 </script>
 </body>

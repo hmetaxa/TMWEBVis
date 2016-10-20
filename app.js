@@ -1,5 +1,6 @@
 var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database('H:/Omiros/Projects/Datasets/ACM/PTMDB_ACM2016.db');
+//var db = new sqlite3.Database('H:/Omiros/Projects/Datasets/ACM/PTMDB_ACM2016.db');
+var db = new sqlite3.Database('C:/Projects/datasets/ACM/PTMDB_ACM2016.db');
 // var db = new sqlite3.Database('/Users/nmpegetis/Sites/astero.di.uoa.gr/graphs/dbs/new/PTMDB_ACM2016.db');
 // var db = new sqlite3.Database('/data/PTM3DB_oct15.db');
 var queries = require("./config.js");
@@ -248,14 +249,16 @@ restapi.get('/getTrends', function (req, res) {
         query += ")";
     }
 
-    query += " ORDER BY EntityId, title, xaxis";
+    query += " ORDER BY  title, xaxis";
     // query += " ORDER BY EntityTopicDistribution.TopicId";
 
     console.log("query: "+query);
     var rowset = db.all(query, [param2], function (err, row) {
+        console.log("rows: "+row.length);
         for (var i = 0; i < row.length; i++) {
             data.push(row[i]);
         }
+        
         res.json({"response": data})
     });
 });

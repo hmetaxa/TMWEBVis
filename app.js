@@ -230,6 +230,13 @@ restapi.get('/getTrends', function (req, res) {
         }
         query = queries.conference;
     }
+    else if (param3.toLowerCase() == "funder"){
+        if (!req.query.id) {
+            res.json({"error": "Missing arguments"});
+            return;
+        }
+        query = queries.funder;
+    }
     else if (param3.toLowerCase() == "corpus"){
         query = queries.corpus;
     }
@@ -253,7 +260,8 @@ restapi.get('/getTrends', function (req, res) {
     // query += " ORDER BY EntityTopicDistribution.TopicId";
 
     console.log("query: "+query);
-    var rowset = db.all(query, [param2], function (err, row) {
+    var rowset = db.all(query,{
+          $experimentId: param2}, function (err, row) {
         console.log("rows: "+row.length);
         for (var i = 0; i < row.length; i++) {
             data.push(row[i]);

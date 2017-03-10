@@ -165,7 +165,7 @@
     </select>
 </div>
 
-<div id="setDiv" class="col-xs-1" style="display: none;">
+<div id="setDiv" class="col-xs-1" style="display: none; margin-left:90px;">
     Select Set: <br/>
     <select>
         <option>topics</option>
@@ -189,6 +189,16 @@
         <option selected>stream</option>
         <option>area</option>
         <option>line</option>
+    </select>
+</div>
+<div id="selectJournalDiv" class="col-xs-12" style="margin-left:90px;">
+    Select Journal: <br/>
+    <select>
+    </select>
+</div>
+<div id="selectConferenceDiv" class="col-xs-12" style="margin-left:90px;">
+    Select Conference: <br/>
+    <select>
     </select>
 </div>
 <div id="spinnerDiv" style="display: none;">
@@ -318,10 +328,17 @@
     console.log("Antonis' test");
     var experiment;
     var topics, entities, conferences, journals;
+    var selectedJournal, selectedConference;
     var listOfTopics = {};
+    var listOfJournals = {};
+    var listOfConferences = {};
     var check = {"a1":0, "a2":0, "b1":0, "b2":0, "c1":0, "c2":0, "d1":0, "d2":0};
 
     loadFromUrlParametersAndServer();
+
+    //hide Journal and Conference setDiv
+    $("#selectJournalDiv").hide();
+    $("#selectConferenceDiv").hide();
 
     var urlEx = "http://localhost:3001/getExperiments";
     var urlEn = "http://localhost:3001/getEntitiesList?ex=";
@@ -412,13 +429,14 @@
         $("#m4").addClass("active");
 
         $("#setDiv>select").empty();
-        $("#setDiv>select").append($("<option></option>").attr("id", "set3").attr("value", "journal").text("journal"));
+        $("#setDiv>select").append($("<option></option>").attr("id", "set3").attr("value", "corpus").text("corpus"));
         $("#setDiv>select").append($("<option></option>").attr("id", "set4").attr("value", "conference").text("conference"));
-        $("#setDiv>select").append($("<option></option>").attr("id", "set5").attr("value", "corpus").text("corpus"));
+        $("#setDiv>select").append($("<option></option>").attr("id", "set5").attr("value", "journal").text("journal"));
         $("#setDiv").show();
         $("#spinnerDiv").show();
 
-        ajaxCall(4, urlJo + experiment);
+        //giati on load corpus is default
+        ajaxCall(5, urlTo + experiment);
 
         $(".form-control").removeClass("darkClass");
         $("#set3").on("click", function () {
@@ -529,7 +547,15 @@
             $('#undo_redo_to').empty();
             $('#to>input').remove();
             $(".form-control").removeClass("darkClass");
+            //edw kwdikas an to set Div einai Journal/////////////////////////
+            $("#selectJournalDiv").show();
+            $("#selectConferenceDiv").hide();
+            /////////////////////////////////////////////////////////////////
             ajaxCall(4, urlJo + experiment);
+            //selectedJournal = $("#selectJournalDiv>select>option:selected").val();
+            //console.log("SelectedJo = "+selectedJournal);
+            //var addToUrl = experiment + "&jo=" + selectedJournal;
+            //ajaxCall(5, urlTo + selectedJournal);
         }
         else if (set == "conference"){
             $("#spinnerDiv").show();
@@ -538,7 +564,12 @@
             $('#undo_redo_to').empty();
             $('#to>input').remove();
             $(".form-control").removeClass("darkClass");
+            //edw kwdikas an to set Div einai Journal/////////////////////////
+            $("#selectJournalDiv").hide();
+            $("#selectConferenceDiv").show();
+            /////////////////////////////////////////////////////////////////
             ajaxCall(3, urlCo + experiment);
+            //ajaxCall(5, urlTo + selectedConference);
         }
         else if (set == "corpus"){
             $('#undo_redo').empty();
@@ -547,7 +578,41 @@
             $('#to>input').remove();
             $("#spinnerDiv").hide();
             $(".form-control").addClass("darkClass");
+            //edw kwdikas an to set Div einai Journal || Conference/////////////////////////
+            $("#selectJournalDiv").hide();
+            $("#selectConferenceDiv").hide();
+            /////////////////////////////////////////////////////////////////
+
+            ajaxCall(5, urlTo + experiment);
         }
+    });
+
+    //in order to change topics in box according to selected journal
+    $("#selectJournalDiv>select").on("change", function (s) {
+        var selectedJournal = $("#selectJournalDiv>select>option:selected").val();
+        var newUrl = urlTo+experiment+"&jo="+selectedJournal;
+        console.log("in ajaxCall url:"+newUrl);
+        $("#spinnerDiv").show();
+        $('#undo_redo').empty();
+        $('#from>input').remove();
+        $('#undo_redo_to').empty();
+        $('#to>input').remove();
+        $(".form-control").removeClass("darkClass");
+        ajaxCall(5, newUrl);
+    });
+
+    //in order to change topics in box according to selected conference
+    $("#selectConferenceDiv>select").on("change", function (s) {
+        var selectedConference = $("#selectConferenceDiv>select>option:selected").val();
+        var newUrl = urlTo+experiment+"&conf="+selectedConference;
+        console.log("in ajaxCall url:"+newUrl);
+        $("#spinnerDiv").show();
+        $('#undo_redo').empty();
+        $('#from>input').remove();
+        $('#undo_redo_to').empty();
+        $('#to>input').remove();
+        $(".form-control").removeClass("darkClass");
+        ajaxCall(5, newUrl);
     });
 
 
@@ -559,7 +624,17 @@
             url += "spider.html?ex=" + $("#experimentDiv>select>option:selected").val() + "&set=" + $("#setDiv>select>option:selected").val() + "&s=" + $("#similarityDiv>select>option:selected").val();
         }
         else if ($(".active").attr("id") == "m4") {
-            url += "trends.html?ex=" + $("#experimentDiv>select>option:selected").val() + "&set=" + $("#setDiv>select>option:selected").val() + "&type=" + $("#trendDiv>select>option:selected").val();
+            //edw tha prepei na allaksei, an einai corpus den tha pairnei slectedJournal h selectedConference, alliws tha pairnei
+            if($("#setDiv>select>option:selected").val() == "journal"){
+                url += "trends.html?ex=" + $("#experimentDiv>select>option:selected").val() + "&set=" + $("#setDiv>select>option:selected").val() + "&type=" + $("#trendDiv>select>option:selected").val() + "&jo=" + $("#selectJournalDiv>select>option:selected").val();
+            }
+            else if($("#setDiv>select>option:selected").val() == "conference"){
+                url += "trends.html?ex=" + $("#experimentDiv>select>option:selected").val() + "&set=" + $("#setDiv>select>option:selected").val() + "&type=" + $("#trendDiv>select>option:selected").val() + "&conf=" + $("#selectConferenceDiv>select>option:selected").val();
+            }
+            else{
+                url += "trends.html?ex=" + $("#experimentDiv>select>option:selected").val() + "&set=" + $("#setDiv>select>option:selected").val() + "&type=" + $("#trendDiv>select>option:selected").val();
+            }
+            //url += "trends.html?ex=" + $("#experimentDiv>select>option:selected").val() + "&set=" + $("#setDiv>select>option:selected").val() + "&type=" + $("#trendDiv>select>option:selected").val();
         }
         else if ($(".active").attr("id") == "m5") {
             url += "cloud.html?ex=" + $("#experimentDiv>select>option:selected").val();
@@ -582,6 +657,46 @@
 ////            window.location.replace(url);
         window.open(url, '_blank');
     });
+
+    function fillJournal(response) {
+        console.log("Trexei prwta thn fillJournal!");
+        response.forEach(function (d, i) {
+            listOfJournals[i] = {
+                id: d.id,
+                title: d.name
+            }; //value # of publications
+
+            //$('#selectJournalDiv>select')
+                    //.append("<option value=\"" + i + "\" id=\"" + d.id + "\" title=\"" + d.name + "\"> " + d.name + "</option>");
+                    console.log("journalId:"+d.id);
+
+            $("#selectJournalDiv>select").append($("<option></option>").attr("id", d.id).attr("value", d.id).attr("data-title", d.desc).attr("data-content", i).text(d.name));
+        });
+
+        //sto default selectedJournal einai to prwto dhladh sthn thesh 0
+        selectedJournal = listOfJournals[0].id;
+        //$('#undo_redo').multiselect("refresh");
+    }
+
+    function fillConference(response) {
+
+        response.forEach(function (d, i) {
+            listOfConferences[i] = {
+                id: d.id,
+                title: d.name
+            }; //value # of publications
+
+            /*$('#selectConferenceDiv>select')
+                    .append("<option value=\"" + i + "\" id=\"" + d.id + "\" title=\"" + d.name + "\"> " + d.name + "</option>");*/
+            console.log("conferenceId:"+d.id);
+
+            $("#selectConferenceDiv>select").append($("<option></option>").attr("id", d.id).attr("value", d.id).attr("data-title", d.desc).attr("data-content", i).text(d.id));
+        });
+
+        //$('#undo_redo').multiselect("refresh");
+    }
+
+
 
     function fillForm(response) {
 
@@ -693,7 +808,12 @@
                     url: url,
                     success: function (resp) {
                         conferences = resp.response;
-                        fillForm(conferences);
+                        fillConference(conferences);
+                        //otan zhtaei listOfConferences by default fortwnei ta topics tou prwtou conference mexri onChange conference
+                        selectedConference = listOfConferences[0].id;
+                        var newUrl = urlTo+experiment+"&conf="+selectedConference;
+                        console.log("in ajaxCall url:"+newUrl);
+                        ajaxCall(5, newUrl);
                         $("#spinnerDiv").hide();
                     },
                     error: function (e) {
@@ -711,7 +831,13 @@
                     url: url,
                     success: function (resp) {
                         journals = resp.response;
-                        fillForm(journals);
+                        fillJournal(journals);
+                        //otan zhtaei listOfJournals by default fortwnei ta topics tou prwtou journal mexri onChange journal
+                        selectedJournal = listOfJournals[0].id;
+                        var newUrl = urlTo+experiment+"&jo="+selectedJournal;
+                        console.log("in ajaxCall url:"+newUrl);
+                        ajaxCall(5, newUrl);
+                        //fillForm(journals);
                         $("#spinnerDiv").hide();
                     },
                     error: function (e) {

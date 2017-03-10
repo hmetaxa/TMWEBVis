@@ -56,7 +56,7 @@
     var layoutId, layoutType, experiment,
             topics, topicsNoSort, topicsSort, topicsFile,
             trends, trendsFile, layoutSet, layoutSimilarity,
-            response;
+            response, selectedJournal, selectedConference;
 
 
     var columns = []; ///todo maybe not needed
@@ -117,7 +117,7 @@
 
     //var svg = d3.select("#chart")
     var svg = d3.select("body")
-    //.append("div")   
+    //.append("div")
     .append("svg")
     .attr("width", "100%")
     .attr("height", "100%")
@@ -165,6 +165,7 @@
         var i=0;
 
         response.forEach(function (d) {
+            console.log("Mphke sthn response.forEach");
             if (varNames.indexOf(d.topicId)==-1)
             {
                 topics.push({index: i++, id: d.topicId, title: d.title});
@@ -172,6 +173,7 @@
                 //topic_hash.push(d.title);
             }
         });
+        console.log("varNames in createTrends:"+JSON.stringify(varNames));
 
         // var result = pivot(response, ['xaxis'], ['title'], {});
         // for (var i = 0; i < result.columnHeaders.length; i++) {
@@ -225,7 +227,7 @@
                     })
                     .y(function (d) {
                         return y(d.value);
-                    }); 
+                    });
 
             var seriesData = [], series = {};
 
@@ -234,8 +236,8 @@
                 seriesData.push(series[name]);
             });
 
-                
-            data.forEach(function (d) {                                 
+
+            data.forEach(function (d) {
                 series[d.topicId].values.push({name: d.topicId, label: d.xaxis, value: d.weight});
             });
 
@@ -344,14 +346,17 @@
 
             var seriesArr = [], series = {};
 
+            console.log("varNames:"+JSON.stringify(varNames));
+
             varNames.forEach(function (name) {
                 series[name] = {name: name, values: []};
+                console.log("Antonis:series[name]:"+JSON.stringify(series[name]));
                 seriesArr.push(series[name]);
             });
 
             console.log(data)
-    
-            data.forEach(function (d) {                                 
+
+            data.forEach(function (d) {
                 series[d.topicId].values.push({name: d.topicId, label: d.xaxis, value: d.weight});
             });
 
@@ -360,7 +365,9 @@
             }));
 
             //  stack(seriesArr.reverse());
+            console.log("Ftanei mexri edw! me seriesArr:"+JSON.stringify(seriesArr));
             stack(seriesArr);
+            console.log("Pernaei edw!");
 
             y.domain([0, d3.max(seriesArr, function (c) {
                 return d3.max(c.values, function (d) {
@@ -604,11 +611,20 @@
         }
 
         if ((layoutSet = getUrlParameter('set')) == null) {
-            layoutSet = 'journal';
+            //layoutSet = 'journal';
+            //twra to default einai to corpus opote edw mallon etsi twra
+            layoutSet = 'corpus';
         }
 
         if ((layoutSimilarity = getUrlParameter('s')) == null) {
             layoutSimilarity = '0.9';
+        }
+
+        if(layoutSet == 'journal'){
+            selectedJournal = getUrlParameter('jo');
+        }
+        else if(layoutSet == 'conference'){
+            selectedConference = getUrlParameter('conf');
         }
     }
 
@@ -619,22 +635,67 @@
 
     function ajaxCall() {
 
-        console.log("ajaxCall for trend layout: " + experiment+"API: http://localhost:3001/getTrends"+"ex=" + experiment + "&id=" + layoutId + "&set=" + layoutSet + "&s=" + layoutSimilarity);
-        var url = "http://88.197.53.136:3001/getTrends";
-        return $.ajax({
-            type: "GET",
-            async: true,
-            url: url,
-            data: "ex=" + experiment + "&id=" + layoutId + "&set=" + layoutSet + "&s=" + layoutSimilarity,
-            success: function (resp) {
-                response = resp.response;
-                createTrends();
-            },
-            error: function (e) {
-                console.log("efdtasaaaaa")
-                alert('Error: ' + JSON.stringify(e));
-            }
-        });
+        if(layoutSet == 'journal'){
+            console.log("ajaxCall for trend layout: " + experiment+"API: http://localhost:3001/getTrends"+"ex=" + experiment + "&id=" + layoutId + "&set=" + layoutSet + "&jo=" + selectedJournal + "&s=" + layoutSimilarity);
+            var url = "http://88.197.53.136:3001/getTrends";
+            //var url = "http://127.0.0.1:3001/getTrends";
+            return $.ajax({
+                type: "GET",
+                async: true,
+                url: url,
+                data: "ex=" + experiment + "&id=" + layoutId + "&set=" + layoutSet + "&jo=" + selectedJournal + "&s=" + layoutSimilarity,
+                success: function (resp) {
+                    console.log("resp:"+JSON.stringify(resp));
+                    response = resp.response;
+                    createTrends();
+                },
+                error: function (e) {
+                    console.log("efdtasaaaaa")
+                    alert('Error: ' + JSON.stringify(e));
+                }
+            });
+        }
+        else if(layoutSet == 'conference'){
+            console.log("ajaxCall for trend layout: " + experiment+"API: http://localhost:3001/getTrends"+"ex=" + experiment + "&id=" + layoutId + "&set=" + layoutSet + "&conf=" + selectedConference + "&s=" + layoutSimilarity);
+            var url = "http://88.197.53.136:3001/getTrends";
+            //var url = "http://127.0.0.1:3001/getTrends";
+            return $.ajax({
+                type: "GET",
+                async: true,
+                url: url,
+                data: "ex=" + experiment + "&id=" + layoutId + "&set=" + layoutSet + "&conf=" + selectedConference + "&s=" + layoutSimilarity,
+                success: function (resp) {
+                    console.log("resp:"+JSON.stringify(resp));
+                    response = resp.response;
+                    createTrends();
+                },
+                error: function (e) {
+                    console.log("efdtasaaaaa")
+                    alert('Error: ' + JSON.stringify(e));
+                }
+            });
+        }
+        else{
+            console.log("ajaxCall for trend layout: " + experiment+"API: http://localhost:3001/getTrends"+"ex=" + experiment + "&id=" + layoutId + "&set=" + layoutSet + "&s=" + layoutSimilarity);
+            var url = "http://88.197.53.136:3001/getTrends";
+            //var url = "http://127.0.0.1:3001/getTrends";
+            return $.ajax({
+                type: "GET",
+                async: true,
+                url: url,
+                data: "ex=" + experiment + "&id=" + layoutId + "&set=" + layoutSet + "&s=" + layoutSimilarity,
+                success: function (resp) {
+                    console.log("resp:"+JSON.stringify(resp));
+                    response = resp.response;
+                    createTrends();
+                },
+                error: function (e) {
+                    console.log("efdtasaaaaa")
+                    alert('Error: ' + JSON.stringify(e));
+                }
+            });
+        }
+
     }
 
     function UrlExists(url) {

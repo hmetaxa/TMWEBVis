@@ -102,7 +102,7 @@ restapi.get('/getTopics', function (req, res) {
         res.json({"error": "Missing arguments"});
         return;
     }
-    
+
     var data = [];
     var param1;
     var param2 = req.query.ex;
@@ -208,6 +208,7 @@ restapi.get('/getTrends', function (req, res) {
     var param1;
     var param2 = req.query.ex;
     var param3 = req.query.set;
+    var param4;
     var query = "";
 
     if (req.query.id) {
@@ -222,6 +223,8 @@ restapi.get('/getTrends', function (req, res) {
             return;
         }
         query = queries.journal;
+        param4 = req.query.jo;
+        console.log("req.query:"+JSON.stringify(req.query));
     }
     else if (param3.toLowerCase() == "conference"){
         if (!req.query.id) {
@@ -229,6 +232,7 @@ restapi.get('/getTrends', function (req, res) {
             return;
         }
         query = queries.conference;
+        param4 = req.query.conf;
     }
     else if (param3.toLowerCase() == "funder"){
         if (!req.query.id) {
@@ -250,7 +254,8 @@ restapi.get('/getTrends', function (req, res) {
         for (var i in ids) {
             if (notfirst)
                 query += " or ";
-            query += "EntityId='" + ids[i] + "' ";
+            //query += "EntityId='" + ids[i] + "' ";
+            query += "TopicDescription.TopicId='" + ids[i] + "' ";
             notfirst = true;
         }
         query += ")";
@@ -259,16 +264,42 @@ restapi.get('/getTrends', function (req, res) {
     query += " ORDER BY  title, xaxis";
     // query += " ORDER BY EntityTopicDistribution.TopicId";
 
+    console.log("param4:"+param4);
     console.log("query: "+query);
-    var rowset = db.all(query,{
-          $experimentId: param2}, function (err, row) {
-        console.log("rows: "+row.length);
-        for (var i = 0; i < row.length; i++) {
-            data.push(row[i]);
-        }
-        
-        res.json({"response": data})
-    });
+    if (param3.toLowerCase() == "journal") {
+        var rowset = db.all(query,{
+              $experimentId: param2, $joId: param4}, function (err, row) {
+            console.log("rows: "+row.length);
+            for (var i = 0; i < row.length; i++) {
+                data.push(row[i]);
+            }
+
+            res.json({"response": data})
+        });
+    }
+    else if (param3.toLowerCase() == "conference"){
+        var rowset = db.all(query,{
+              $experimentId: param2, $confId: param4}, function (err, row) {
+            console.log("rows: "+row.length);
+            for (var i = 0; i < row.length; i++) {
+                data.push(row[i]);
+            }
+
+            res.json({"response": data})
+        });
+    }
+    else {
+        var rowset = db.all(query,{
+              $experimentId: param2}, function (err, row) {
+            console.log("rows: "+row.length);
+            for (var i = 0; i < row.length; i++) {
+                data.push(row[i]);
+            }
+
+            res.json({"response": data})
+        });
+    }
+
 });
 
 
@@ -414,7 +445,7 @@ restapi.get('/getEntitiesList', function (req, res) {
     var data = [];
     var param1 = req.query.ex;
     var query = queries.entitiesList;
-    
+
     console.log("query: "+query);
     var rowset = db.all(query, [param1], function (err, row) {
         for (var i = 0; i < row.length; i++) {
@@ -477,16 +508,58 @@ restapi.get('/getTopicsList', function (req, res) {
 
     var data = [];
     var param1 = req.query.ex;
-    var query = queries.topicsList;
+    var param2;
+    //var query = queries.topicsList;
+    var query;
 
-    console.log("query: "+query);
+    if (req.query.jo || req.query.conf){
+        if(req.query.jo){
+            param2 = req.query.jo;
+            query = queries.topicsListJo;
+        }
+        else{
+            param2 = req.query.conf;
+            query = queries.topicsListConf;
+        }
+        /*console.log("param1:"+param1);
+        console.log("param2:"+param2);*/
+        //query = queries.topicsListJo;
+
+        console.log("query: "+query);
+        var rowset = db.all(query, [param2,param1], function (err, row) {
+
+            //console.log("the row:"+JSON.stringify(row));
+            if(row !== undefined){
+                for (var i = 0; i < row.length; i++) {
+                    data.push(row[i]);
+                }
+            }
+
+            res.json({"response": data})
+        });
+        console.log("rowset:"+rowset);
+    }
+    else{
+        query = queries.topicsList;
+
+        console.log("query: "+query);
+        var rowset = db.all(query, [param1], function (err, row) {
+            for (var i = 0; i < row.length; i++) {
+                data.push(row[i]);
+            }
+            res.json({"response": data})
+        });
+    }
+
+    /*console.log("query: "+query);
     var rowset = db.all(query, [param1], function (err, row) {
         for (var i = 0; i < row.length; i++) {
             data.push(row[i]);
         }
         res.json({"response": data})
-    });
+    });*/
 });
 
 // Submit GET or POST to http://localhost:3001/{webServiceName}
 restapi.listen(3001);
+

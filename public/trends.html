@@ -636,7 +636,7 @@
     function ajaxCall() {
 
         if(layoutSet == 'journal'){
-            console.log("ajaxCall for trend layout: " + experiment+"API: http://localhost:3001/getTrends"+"ex=" + experiment + "&id=" + layoutId + "&set=" + layoutSet + "&jo=" + selectedJournal + "&s=" + layoutSimilarity);
+            //console.log("ajaxCall for trend layout: " + experiment+"API: http://localhost:3001/getTrends"+"ex=" + experiment + "&id=" + layoutId + "&set=" + layoutSet + "&jo=" + selectedJournal + "&s=" + layoutSimilarity);
             var url = "http://88.197.53.136:3001/getTrends";
             //var url = "http://127.0.0.1:3001/getTrends";
             return $.ajax({
@@ -656,7 +656,7 @@
             });
         }
         else if(layoutSet == 'conference'){
-            console.log("ajaxCall for trend layout: " + experiment+"API: http://localhost:3001/getTrends"+"ex=" + experiment + "&id=" + layoutId + "&set=" + layoutSet + "&conf=" + selectedConference + "&s=" + layoutSimilarity);
+            //console.log("ajaxCall for trend layout: " + experiment+"API: http://localhost:3001/getTrends"+"ex=" + experiment + "&id=" + layoutId + "&set=" + layoutSet + "&conf=" + selectedConference + "&s=" + layoutSimilarity);
             var url = "http://88.197.53.136:3001/getTrends";
             //var url = "http://127.0.0.1:3001/getTrends";
             return $.ajax({

@@ -261,7 +261,7 @@ restapi.get('/getTrends', function (req, res) {
         query += ")";
     }
 
-    query += " ORDER BY  title, xaxis";
+    query += " ORDER BY xaxis ASC";
     // query += " ORDER BY EntityTopicDistribution.TopicId";
 
     console.log("param4:"+param4);
